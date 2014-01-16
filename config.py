@@ -23,3 +23,9 @@ ALWAYS_CHAR_DETECT = False
 #对于kindle touch和kindle paperwhite可以设置为True。
 GENERATE_TOC_DESC = True
 TOC_DESC_WORD_LIMIT = 150  # 内容预览（摘要）字数限制
+
+
+TIMEZONE = 8  #默认时区
+
+#发送地址
+SrcEmail = "zhangzred@gmail.com"
