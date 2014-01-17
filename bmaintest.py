@@ -33,7 +33,7 @@ from books.base import BaseFeedBook,  BaseUrlBook
 #使用rq任务队列
 from rq2 import Queue,use_connection
 from worker import conn
-from lib.pushworker import pushwork
+from pushworker import pushwork
 
 def local_time(fmt="%Y-%m-%d %H:%M", tz=TIMEZONE):
 	return (datetime.datetime.utcnow()+datetime.timedelta(hours=tz)).strftime(fmt)

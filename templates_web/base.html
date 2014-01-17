@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>{{title}} - Kindle's Ear</title>
-    <meta name="description" content="KindleEar is a service for Amazon Kindle owners that lets you aggregate feeds you chosen and have them delivered to your Kindle in a convenient, easy-to-navigate format." />
+    <meta name="description" content="RedKindle is a service for Amazon Kindle owners that lets you aggregate feeds you chosen and have them delivered to your Kindle in a convenient, easy-to-navigate format." />
     <link rel="stylesheet" href="/static/base.css" type="text/css" charset="utf-8"/>
     {% block cssfiles %}{% endblock %}
     {% block css %}{% endblock %}
@@ -15,11 +15,11 @@
 {% endblock %}
     <div id="header">
         {% block header %}
-        <h1><a href="/">KindleEar<sup>&reg;</sup></a></h1>
+        <h1><a href="/">RedKindle<sup>&reg;</sup></a></h1>
         {% if nickname %}
           <a class="nav" href="/logout">退出</a>
           <span style="color: #ccc;">&bull;</span>
-        <span>Hello, <a href="/admin"><strong>{{nickname}}</strong></a></span>
+        <span>Hello, <a href="#"><strong>{{nickname}}</strong></a></span>
         {% endif %}
         <div class="clear"></div>
         {% endblock %}
@@ -39,7 +39,7 @@
         {% else %}
         <a style="font-weight:normal;" href="/setting">设置</a>
         {% endif %}
-        <span style="color: #ccc;">&bull;</span>
+<!--        <span style="color: #ccc;">&bull;</span>
         {% if current == "logs" %}
         投递日志
         {% else %}
@@ -56,7 +56,7 @@
         反馈
         {% else %}
         <a style="font-weight:normal;" href="/feedback">反馈</a>
-        {% endif %}
+        {% endif %}-->
         </h2>
     {% else %}
         <h2 style="text-align:center;padding:10px 0;"><a href="/login">请先登陆</a></h2>
@@ -70,7 +70,7 @@
     <div id="footer">
         {% block footer %}
         <div class="clear"></div>
-        2013 &copy; KindleEar | <a href="https://github.com/cdhigh/kindleear">Github page</a>
+        2013 &copy; RedKindle | <a href="https://github.com/ynhacler/redkindle">Github page</a>
         {% endblock %}
     </div>
 </body>

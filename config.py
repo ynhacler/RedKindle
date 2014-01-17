@@ -29,3 +29,6 @@ TIMEZONE = 8  #默认时区
 
 #发送地址
 SrcEmail = "zhangzred@gmail.com"
+
+#邮件附件标题
+ATTACH_FILENAME= 'redkindle_feed.mobi'

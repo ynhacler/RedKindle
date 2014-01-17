@@ -183,7 +183,7 @@ class BaseFeedBook:
 	# 下面的内容为类实现细节
 	#------------------------------------------------------------
 	def __init__(self,log=None,imgindex=0):
-		self.log = log
+		self.log = default_log if log is None else log
 		self.compiled_urlfilters = []
 		self._imgindex = imgindex
 
