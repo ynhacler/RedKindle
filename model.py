@@ -108,6 +108,15 @@ def put_user_messgaes(k_id,kindle_email,send_time,enable_send,keep_image,timezon
 	except:
 		return 0
 
+#查询当前时间的可推送用户
+def get_current_push_users(hour):
+	try:
+		myvar = dict(hour=hour)
+		result = db.select('kinuser',myvar,where='send_time=timezone+$hour and enable_send = 1',_test=False)
+		return result
+	except:
+		return 0
+
 if __name__ == "__main__":
 #	print getuser(name='zzh')[0].passwd
 #	print userid2feeds(2)
@@ -118,4 +127,5 @@ if __name__ == "__main__":
 #	print put_unsubscribe(1,2)
 #	print put_user_messgaes(1,'zzh@126.com',23,int(True),int(False),-12)
 #	print int(True)
-	print username2feeds('zzh')
+#	print username2feeds('zzh')
+	print get_current_push_users(19)[0]

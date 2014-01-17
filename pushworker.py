@@ -18,7 +18,7 @@ from config import *
 
 
 #生产模板
-def render_and_write(template_name, context, output_name, output_dir):
+def render_and_write(template_name, context, output_name, output_dir,templates_env):
 	"""Render `template_name` with `context` and write the result in the file
 	`output_dir`/`output_name`."""
 	template = templates_env.get_template(template_name)
@@ -68,9 +68,10 @@ def pushwork2(a,b):
 
 #worker生产电子书，并推送
 def pushwork(email,feeds):
-	log = default_log
+#	log = default_log
+	log = logging.getLogger()
 
-	redbook = BaseFeedBook()
+	redbook = BaseFeedBook(log)
 	redbook.feeds = feeds
 
 	#所有的信息
@@ -132,20 +133,20 @@ def pushwork(email,feeds):
 	}
 
 	## TOC (NCX)
-	render_and_write('toc.xml', wrap, 'toc.ncx', output_dir)
+	render_and_write('toc.xml', wrap, 'toc.ncx', output_dir,templates_env)
 	## COVER (HTML)
-	render_and_write('cover.html',wrap,'cover.html',output_dir)
+	render_and_write('cover.html',wrap,'cover.html',output_dir,templates_env)
 	## TOC (HTML)
-	render_and_write('toc.html', wrap, 'toc.html', output_dir)
+	render_and_write('toc.html', wrap, 'toc.html', output_dir,templates_env)
 	## OPF
-	render_and_write('opf.xml', wrap, 'daily.opf', output_dir)
+	render_and_write('opf.xml', wrap, 'daily.opf', output_dir,templates_env)
 	#/home/zzh/Desktop/temp/v3
 	for feed in data:
-		render_and_write('feed.html',feed,'%s.html' % feed['number'],output_dir)
+		render_and_write('feed.html',feed,'%s.html' % feed['number'],output_dir,templates_env)
 
 
 	#gen mobi
-	mobi(path.join(output_dir,'daily.opf'),path.join(output_dir,'kindlegen_1.1') ,log)
+	mobi_file = mobi(path.join(output_dir,'daily.opf'),path.join(ROOT,'kindlegen_1.1') ,log)
 
 	#send mail
 	if mobi_file :
