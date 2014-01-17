@@ -2,7 +2,7 @@
 
 from rq2 import Queue,use_connection
 from worker import conn
-from pushworker import pushwork2
+from pushworker import pushwork
 from datetime import datetime
 import pytz
 

@@ -3,7 +3,7 @@
 <ncx xmlns:mbp="http://mobipocket.com/ns/mbp" xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="zh-CN">
     <head>
     	<meta name="dtb:uid" content="Book-feed-zzh-{{date}}"/>
-        <meta name="dtb:depth" content="2"/>
+        <meta name="dtb:depth" content="4"/>
         <meta name="dtb:totalPageCount" content="0"/>
         <meta name="dtb:maxPageNumber" content="0"/>
     </head>
@@ -11,15 +11,8 @@
     <docAuthor><text>DailyKindle</text></docAuthor>
     <navMap>
 
-    	<navPoint id="toc" playOrder="1">
-        	<navLabel>
-			<text>封面</text>
-		</navLabel>
-		<content src="cover.html"/>
-	</navPoint>
 
-   	<navPoint class="periodical" id="toc" playOrder="2">
-		<mbp:meta-img src="masthead.gif" name="mastheadImage"/>
+   	<navPoint class="periodical" id="toc" playOrder="1">
 		<navLabel>
 			<text>目录</text>
 		</navLabel>

@@ -78,7 +78,7 @@ def pushwork(email,feeds):
 	data = []
 	feed_number = 1
 	entry_number = 0
-	play_order = 2
+	play_order = 1
 
 	temp_sec = ''
 

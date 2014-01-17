@@ -16,7 +16,6 @@
   <manifest>
   	<item id="ncx" media-type="application/x-dtbncx+xml" href="toc.ncx"></item>
 	<item id="style" href="style.css" media-type="application/css" />
-	<item id="cover" href="cover.html" media-type="application/xhtml+xml" />
 	<item id="toc" media-type="application/xhtml+xml" href="toc.html"/>
 	{% for feed in feeds %}
 	<item id="item{{feed.number}}" media-type="application/xhtml+xml" href="{{feed.number}}.html"/>
