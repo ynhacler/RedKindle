@@ -2,10 +2,10 @@
 <package xmlns="http://www.idpf.org/2007/opf" version="2.0" unique-identifier="BookId">
   <metadata>
   	<dc-metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
-	      <dc:title>DailyKindle {{date}}</dc:title>
+	      <dc:title>RedKindle {{date}}</dc:title>
 	      <dc:language>zh-CN</dc:language>
 	      <meta content="cover-image" name="cover"/>
-	      <dc:creator>DailyKindle</dc:creator>
+	      <dc:creator>RedKindle</dc:creator>
 	      <meta name="cover" content="cover-image" />
 	</dc-metadata>
 	<x-metadata>
