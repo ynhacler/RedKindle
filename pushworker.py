@@ -67,7 +67,7 @@ def pushwork2(a,b):
 
 
 #worker生产电子书，并推送
-def pushwork(email,feeds):
+def pushwork(email,feeds,ifimg):
 #	log = default_log
 	log = logging.getLogger()
 
@@ -92,7 +92,7 @@ def pushwork(email,feeds):
 
 	i=-1 #对feed进行计数
 	for sec_or_media, url, title, content,brief in redbook.Items():
-		if sec_or_media.startswith(r'image/'):
+		if sec_or_media.startswith(r'image/') and ifimg == 1:
 				if sum_pic_size < MAX_PIC_SIZE:
 					filename = path.join(ROOT, 'temp',title)
 					img_num.append(title)

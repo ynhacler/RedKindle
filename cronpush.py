@@ -39,5 +39,5 @@ else:
 					b.append(book.url)
 					feeds.append(b)
 			if user and user.kindle_email:
-				q.enqueue(pushwork,user.kindle_email,feeds)
+				q.enqueue(pushwork,user.kindle_email,feeds,user.keep_image)
 		print '-=end=-'

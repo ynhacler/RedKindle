@@ -229,7 +229,7 @@ class Deliver(BaseHandler):
 				user = model.getuser(username)[0]
 				#加入eq
 				if user and user.kindle_email:
-					jobq.enqueue(pushwork,user.kindle_email,feeds)
+					jobq.enqueue(pushwork,user.kindle_email,feeds,user.keep_image)
 			return jjenv.get_template("autoback.html").render(nickname=session.username,title='Delivering',tips='books put to queue!')
 
 #=====================================================
