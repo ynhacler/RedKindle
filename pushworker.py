@@ -99,7 +99,7 @@ def pushwork(email,feeds):
 					fout = open(filename, "wb")
 					fout.write(content)
 					fout.close()
-					sum_pic_size += getsize(filename)/1024
+					sum_pic_size += path.getsize(filename)/1024
 
 		else:
 			#新的feed开始
