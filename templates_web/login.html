@@ -14,7 +14,7 @@
     <form action="/login" method="POST">
     <table id="login">
         <tr>
-            <td>Username: </td>
+            <td>电子邮箱: </td>
             {% if username %}
             <td><input type="text" name="u" id="username" value={{username}} /></td>
             {% else %}
@@ -22,12 +22,12 @@
             {% endif %}
         </tr>
         <tr>
-            <td>Password: </td>
+            <td>密码: </td>
             <td><input type="password" name="p" id="password" /></td>
         </tr>
         <tr>
             <td></td>
-            <td><input type="submit" value="LOGIN" onclick="javascript:return check();window.close();" target="_parent" /></td>
+            <td><input type="submit" value="登录" onclick="javascript:return check();window.close();" target="_parent" /></td>
         </tr>
     </table>
     </form>

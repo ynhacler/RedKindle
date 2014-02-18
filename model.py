@@ -117,6 +117,10 @@ def get_current_push_users(hour):
 	except:
 		return 0
 
+#插入新用户
+def input_user(user,passwd):
+	db.insert('kinuser',name =user,passwd=passwd)
+
 if __name__ == "__main__":
 #	print getuser(name='zzh')[0].passwd
 #	print userid2feeds(2)
@@ -128,4 +132,5 @@ if __name__ == "__main__":
 #	print put_user_messgaes(1,'zzh@126.com',23,int(True),int(False),-12)
 #	print int(True)
 #	print username2feeds('zzh')
-	print get_current_push_users(19)[0]
+#	print get_current_push_users(19)[0]
+	input_user('zz@11.com','1q2w3e')

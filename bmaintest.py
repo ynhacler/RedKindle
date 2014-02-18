@@ -22,6 +22,12 @@ import model
 
 from config import *
 
+#设置编码方式
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+
+
 #调试模式
 #session不能工作在debug模式
 web.config.debug = False
@@ -80,7 +86,7 @@ class Home(BaseHandler):
 #登录
 class Login(BaseHandler):
 	def GET(self):
-		tips = "Please input username and password to login."
+		tips = "请输入邮箱地址和密码。"
 
 		if session.login == 1:#是否登录
 			web.seeother(r'/')
@@ -90,13 +96,13 @@ class Login(BaseHandler):
 	def POST(self):
 		name, passwd = web.input().get('u'), web.input().get('p')
 		if name.strip() == '':
-			tips = "The username is empty!"
+			tips = "地址为空！"
 			return jjenv.get_template("login.html").render(nickname='',title='Login',tips=tips)
-		elif len(name) > 15:
-			tips = "The username is too long!"
+		elif len(name) > 35:
+			tips = "地址过长!"
 			return jjenv.get_template("login.html").render(nickname='',title='Login',tips=tips,username=name)
 		elif '<' in name or '>' in name or '&' in name:
-			tips = "The username contains chars invalid!"
+			tips = "包含非法字符!"
 			return jjenv.get_template("login.html").render(nickname='',title='Login',tips=tips)
 		pwdhash = hashlib.md5(passwd).hexdigest()
 		if model.isuser(name,pwdhash) == 1:
@@ -104,7 +110,7 @@ class Login(BaseHandler):
 			session.username = name
 			raise web.seeother(r'/')
 		else:
-			tips = "The username is not exist or password is wrong!"
+			tips = "帐号不存在或密码错误!"
 			session.login = 0
 			session.username = ''
 			return jjenv.get_template("login.html").render(nickname='',title='Login',tips=tips,username=name)
@@ -206,6 +212,39 @@ class Setting(BaseHandler):
 		'''
 		raise web.seeother('')#刷新
 
+#注册
+class Register(BaseHandler):
+	def GET(self):
+		if session.login == 1:#是否登录
+			web.seeother(r'/')
+		else:
+			return jjenv.get_template("register.html").render(nickname='',title='Register')
+
+
+	def POST(self):
+		name = web.input().get('u')
+		passwd = web.input().get('p')
+
+		#检查是否已存在，格式问题
+		if name.strip() == '' or passwd.strip() == '':
+			tips = "不能为空!"
+			return jjenv.get_template("register.html").render(nickname='',title='Register',tips=tips)
+		elif len(name) > 35:
+			tips = "地址太长!"
+			return jjenv.get_template("register.html").render(nickname='',title='Register',tips=tips,username=name)
+		elif '<' in name or '>' in name or '&' in name:
+			tips = "含有非法字符!"
+			return jjenv.get_template("register.html").render(nickname='',title='Register',tips=tips)
+
+		u = model.getuser(name)
+		if u:
+			return jjenv.get_template("register.html").render(nickname='',title='Register',tips="用户已存在!")
+		#注册
+		model.input_user(name,hashlib.md5(passwd).hexdigest())
+
+		#返回登录界面
+		raise web.seeother(r'/')
+
 #推送
 class Deliver(BaseHandler):
 	def GET(self):
@@ -242,6 +281,7 @@ urls = (
 	"/unsubscribe/(.*)", "Unsubscribe",
 	"/setting", "Setting",
 	"/deliver", "Deliver",
+	"/register","Register",
 )
 
 app = web.application(urls,globals())

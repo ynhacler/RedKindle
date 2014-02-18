@@ -92,8 +92,8 @@ def pushwork(email,feeds,ifimg):
 
 	i=-1 #对feed进行计数
 	for sec_or_media, url, title, content,brief in redbook.Items():
-		if sec_or_media.startswith(r'image/') and ifimg == 1:
-				if sum_pic_size < MAX_PIC_SIZE:
+		if sec_or_media.startswith(r'image/'):
+				if sum_pic_size < MAX_PIC_SIZE and ifimg == 1:
 					filename = path.join(ROOT, 'temp',title)
 					img_num.append(title)
 					fout = open(filename, "wb")
