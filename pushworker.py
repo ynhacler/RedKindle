@@ -75,6 +75,7 @@ def pushwork(email,feeds):
 	redbook.feeds = feeds
 
 	#所有的信息
+	sum_pic_size = 0#getsize('test.png')/1024 MAX_PIC_SIZE
 	data = []
 	feed_number = 1
 	entry_number = 0
@@ -92,11 +93,14 @@ def pushwork(email,feeds):
 	i=-1 #对feed进行计数
 	for sec_or_media, url, title, content,brief in redbook.Items():
 		if sec_or_media.startswith(r'image/'):
-			filename = path.join(ROOT, 'temp',title)
-			img_num.append(title)
-			fout = open(filename, "wb")
-			fout.write(content)
-			fout.close()
+				if sum_pic_size < MAX_PIC_SIZE:
+					filename = path.join(ROOT, 'temp',title)
+					img_num.append(title)
+					fout = open(filename, "wb")
+					fout.write(content)
+					fout.close()
+					sum_pic_size += getsize(filename)/1024
+
 		else:
 			#新的feed开始
 			if temp_sec != sec_or_media:

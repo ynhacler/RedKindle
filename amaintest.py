@@ -28,7 +28,7 @@ feeds=[[u'163easynet',"http://www.xinhuanet.com/ent/news_ent.xml"],
 feeds2=[[u'XXXzzhXXX',"http://www.sciencenet.cn/xml/news.aspx?news=0"]]
 feeds3=[[u'163easynet',"http://www.xinhuanet.com/ent/news_ent.xml"]]
 zzh = BaseFeedBook(log)
-zzh.feeds = feeds2
+zzh.feeds = feeds3
 
 #所有的信息
 data = []
