@@ -73,6 +73,9 @@ def pushwork(email,feeds,ifimg):
 
 	redbook = BaseFeedBook(log)
 	redbook.feeds = feeds
+	#tupian
+	if ifimg == 0:
+		redbook.keep_image = False
 
 	#所有的信息
 	sum_pic_size = 0#getsize('test.png')/1024 MAX_PIC_SIZE
@@ -93,7 +96,7 @@ def pushwork(email,feeds,ifimg):
 	i=-1 #对feed进行计数
 	for sec_or_media, url, title, content,brief in redbook.Items():
 		if sec_or_media.startswith(r'image/'):
-				if sum_pic_size < MAX_PIC_SIZE and ifimg == 1:
+				if sum_pic_size < MAX_PIC_SIZE:
 					filename = path.join(ROOT, 'temp',title)
 					img_num.append(title)
 					fout = open(filename, "wb")

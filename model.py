@@ -60,8 +60,21 @@ def get_allbooks():
 		return []
 
 #添加feed
-def put_feed(title,url):
-	db.insert('feeds', title=title,url=url)
+def put_feed(title,url,isfull):
+	db.insert('feeds', title=title,url=url,isfulltext=isfull)
+
+#删除feed
+def delete_feed(id):
+	try:
+	#feeds
+		myvar = dict(f_id=id)
+
+                db.delete('feeds', where=web.db.sqlwhere(myvar))
+	#feed_user
+		db.delete('feeds_user', where=web.db.sqlwhere(myvar))
+                return 1
+	except:
+		return 0
 
 #是否存在这本书
 def ifhasbook(id):

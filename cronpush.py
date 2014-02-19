@@ -37,6 +37,10 @@ else:
 					b=[]
 					b.append(book.title)
 					b.append(book.url)
+					if book.isfulltext == 1:
+						b.append(True)
+					else:
+						b.append(False)
 					feeds.append(b)
 			if user and user.kindle_email:
 				q.enqueue(pushwork,user.kindle_email,feeds,user.keep_image)

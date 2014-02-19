@@ -24,13 +24,15 @@
 </fieldset>
 <p></p>
 
-
+{% if level == 3 %}
 <fieldset id="ownfeeds">
     <legend>自定义RSS</legend>
     <form action="" method="POST">
     <div class="book">
         <div class="titleRow">
             <input type="text" name="t" placeholder="标题" />
+	    <label>是否全文:</label>
+	    <input type="checkbox" name="full"/>
         </div>
         <div class="cornerControls">
             <input type="submit" value="添加" class="actionButton" />
@@ -43,7 +45,7 @@
     </form>
 </fieldset>
 <p></p>
-
+{% endif %}
 
 <fieldset id="books">
     <legend>未订阅</legend>
@@ -53,7 +55,10 @@
     <div class="book">
         <div class="titleRow">{{book.title}}</div>
         <div class="cornerControls">
-            <a href="/subscribe/{{book.f_id}}" class="actionButton">订阅</a>
+		{% if level == 3 %}
+			<a href="/delfeed/{{book.f_id}}" class="actionButton">删除</a>
+		{% endif %}
+           	<a href="/subscribe/{{book.f_id}}" class="actionButton">订阅</a>
         </div>
         <div class="summaryRow">{{book.description}}</div>
     </div>

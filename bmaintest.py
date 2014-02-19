@@ -130,16 +130,17 @@ class MySubscription(BaseHandler):
 		#所有RSS源和已订阅的源
 		ownfeeds = model.userid2feeds(user.k_id) if user else None
 		books = list(model.get_allbooks())#webpy返回的是storage对象，用一次就不见了
-		return jjenv.get_template("my.html").render(nickname=session.username,current='my',title='My subscription',books=books,ownfeeds=ownfeeds,tips=tips)
+		return jjenv.get_template("my.html").render(nickname=session.username,current='my',title='My subscription',books=books,ownfeeds=ownfeeds,tips=tips,level=user.level)
 
 	def POST(self):#添加自定义RSS
 		user = self.getcurrentuser()
 		title = web.input().get('t')
 		url = web.input().get('url')
+		isfulltext = int(bool(web.input().get('full')))
 		if not title or not url:
 			return self.GET('title or url is empty!')
 		#添加
-		model.put_feed(title,url)
+		model.put_feed(title,url,isfulltext)
 		raise web.seeother('/my')
 
 #订阅
@@ -186,6 +187,27 @@ class Unsubscribe(BaseHandler):
 		model.put_unsubscribe(user.k_id,id)
 
 		raise web.seeother('/my')
+
+#管理员删除feed
+class Deletefeed(BaseHandler):
+	def GET(self,id):
+		self.login_required()
+		if not id:
+			return "the id is empty!<br/>"
+		try:
+			id = int(id)
+		except:
+			return "the id is invalid!<br/>"
+
+		#判断书id是否正确
+		b = model.ifhasbook(id)
+                if b == 0:
+			return "the book(%d) not exist!<br />" % id
+
+		model.delete_feed(id)
+
+		raise web.seeother('/my')
+
 
 #设置页面
 class Setting(BaseHandler):
@@ -263,6 +285,10 @@ class Deliver(BaseHandler):
 						b=[]
 						b.append(book.title)
 						b.append(book.url)
+						if book.isfulltext == 1:
+							b.append(True)
+						else:
+							b.append(False)
 						feeds.append(b)
 				#取用户信息
 				user = model.getuser(username)[0]
@@ -282,6 +308,7 @@ urls = (
 	"/setting", "Setting",
 	"/deliver", "Deliver",
 	"/register","Register",
+	"/delfeed/(.*)","Deletefeed",
 )
 
 app = web.application(urls,globals())
