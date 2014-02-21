@@ -30,14 +30,23 @@ print r.get(netloc)
 #url='http://tech.sina.com.cn/internet/'
 #url='http://tech.sina.com.cn/i/2014-01-08/08039077686.shtml'
 #url='http://blog.knownsec.com/2012/04/about-content-encoding-gzip/'
-url ='http://news.xinhuanet.com/ent/2014-01/15/c_126007535.htm'
+url ='http://book.douban.com/review/6549990/'
 zzh=URLOpener()
 re=zzh.open(url)
 #print re.info()
 #print re.content.decode('GBK').encode('utf-8')
-print re.content
+#print re.content
+fout=open('zhang_test','wb')
+fout.write(re.content)
+fout.close()
+'''
 encoding = chardet.detect(re.content)['encoding']
 print encoding
 print re.headers
 print isinstance(re.content,unicode)
 print re.content.decode(encoding,'ignore').encode('utf-8')
+'''
+doc = readability.Document(re.content)
+summary = doc.summary(html_partial=True)
+soup = BeautifulSoup(re.content,'lxml')
+print soup.body.contents[0]

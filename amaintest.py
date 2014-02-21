@@ -8,6 +8,8 @@ from jinja2 import Environment, PackageLoader
 from os import path, listdir, system
 from shutil import copy,copytree
 
+from books.ZhihuDaily import ZhihuDaily
+from books.DoubanBook import DoubanBook
 
 def render_and_write(template_name, context, output_name, output_dir):
 	"""Render `template_name` with `context` and write the result in the file
@@ -18,6 +20,9 @@ def render_and_write(template_name, context, output_name, output_dir):
         f.write(template.render(**context).encode('utf-8'))
         f.close()
 
+def mobi(input_file, exec_path):
+	system("%s %s" % (exec_path, input_file))
+
 
 
 
@@ -27,11 +32,23 @@ feeds=[[u'163easynet',"http://www.xinhuanet.com/ent/news_ent.xml"],
 [u'XXXzzhXXX',"http://www.sciencenet.cn/xml/news.aspx?news=0"]]
 feeds2=[[u'XXXzzhXXX',"http://www.sciencenet.cn/xml/news.aspx?news=0"]]
 feeds3=[[u'163easynet',"http://www.xinhuanet.com/ent/news_ent.xml"]]
-feeds4=[[u'3lian','http://app.lifeweek.com.cn/?app=rss&controller=index&action=feed']]
-feeds5=[[u'zhihu','http://cn.nytimes.com/rss.html']]
+feeds4=[[u'3lian','http://feed.36kr.com/c/33346/f/566026/index.rss']]
+feeds5=[[u'zhihu','http://cn.nytimes.com/rss.html',True]]
+
 zzh = BaseFeedBook(log)
-zzh.feeds = feeds5
+zzh2 = ZhihuDaily(log)
+#zzh = DoubanBook(log)
+zzh.feeds = feeds3
 zzh.keep_image = False
+zzh2.keep_image = False
+#zzh.fulltext_by_readability = False
+#zzh.fulltext_by_instapaper = False
+
+zzhs = []
+zzhs.append(zzh)
+zzhs.append(zzh2)
+#总的img计数
+imgindex_temp = 0
 
 #所有的信息
 data = []
@@ -53,40 +70,48 @@ if __name__ == '__main__':
 	img_num = []
 
 	i=-1 #对feed进行计数
-	for sec_or_media, url, title, content,brief in zzh.Items():
-		if sec_or_media.startswith(r'image/'):
-			filename = 'image/'+title
-			img_num.append(title)
-			fout = open(filename, "wb")
-			fout.write(content)
-			fout.close()
-		else:
-			#新的feed开始
-			if temp_sec != sec_or_media:
-				temp_sec = sec_or_media
-				feed_number += 1
+
+	#自动处理的
+	for zz in zzhs:
+		zz._imgindex = imgindex_temp
+		for sec_or_media, url, title, content,brief in zz.Items():
+			if sec_or_media.startswith(r'image/'):
+				filename = 'image/'+title
+				img_num.append(title)
+				fout = open(filename, "wb")
+				fout.write(content)
+				fout.close()
+			else:
+				#新的feed开始
+				if temp_sec != sec_or_media:
+					temp_sec = sec_or_media
+					feed_number += 1
+					play_order += 1
+					local = {
+						'number':feed_number,
+						'play_order':play_order,
+						'entries':[],
+						'title':sec_or_media
+					}
+					i += 1
+					data.insert(i,local)
+				#处理文章
 				play_order += 1
-				local = {
-					'number':feed_number,
+				entry_number += 1
+
+				local_entry = {
+					'number':entry_number,
 					'play_order':play_order,
-					'entries':[],
-					'title':sec_or_media
+					'title':title,
+					'description':brief,
+					'content':content,
 				}
-				i += 1
-				data.insert(i,local)
-			#处理文章
-			play_order += 1
-			entry_number += 1
 
-			local_entry = {
-				'number':entry_number,
-				'play_order':play_order,
-				'title':title,
-				'description':brief,
-				'content':content,
-			}
-
-			data[i]['entries'].append(local_entry)
+				data[i]['entries'].append(local_entry)
+		#raw_input("Input your id plz")
+		imgindex_temp = zz._imgindex
+		#======================end for
+	#手动处理的
 	'''
 			filename = 'image/doc/'+str(play_order)+'.html'
 			fout = open(filename, "wb+")
@@ -97,7 +122,7 @@ if __name__ == '__main__':
 	wrap ={
 		'date': date.today().isoformat(),
 		'feeds':data,
-		'img_nums':zzh._imgindex,
+		'img_nums':imgindex_temp,
 		'img_name':img_num,
 	}
 
@@ -116,6 +141,7 @@ if __name__ == '__main__':
 	for name in listdir(path.join(ROOT, 'image')):
 		copy(path.join(ROOT, 'image', name), path.join(output_dir, name))
 
+	mobi(path.join(output_dir,'daily.opf'),path.join(ROOT,'kindlegen_1.1'))
 	#copytree(path.join(ROOT, 'image'), path.join(output_dir,'image'))
 	print zzh._imgindex
 	print '-=end=-'

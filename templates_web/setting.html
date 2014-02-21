@@ -25,7 +25,7 @@
             <input type="text" name="kindle_email" style="width:240px" value="{% if user and user.kindle_email %}{{ user.kindle_email }}{% endif %}" />{% if success and not user.kindle_email %}<em style="color:red;font-size:80%">此项不能为空</em>{% endif %}
         </p>
         <p>
-            <input type="checkbox" name="enable_send" {% if user and user.enable_send %}checked="1"{% endif %} />
+            <input type="checkbox" name="enable_send" {% if user and user.enable_send %}checked{% endif %} />
             <label>使能自动定时投递</label>
         </p>
         <p>
@@ -65,7 +65,7 @@
         <legend>自定义RSS设置</legend>
         <p>
             <input type="checkbox" name="keepimage" {% if user and user.keep_image %}checked="1"{% endif %} />
-            <label>保留文章图片</label>
+            <label>保留文章图片（最大10M）</label>
         </p>
     </fieldset>
     <p class="save_btn">

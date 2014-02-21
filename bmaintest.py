@@ -272,10 +272,10 @@ class Deliver(BaseHandler):
 	def GET(self):
 		username = web.input().get('u')
 		if username:
-			#搜索非RSS的feed
-
-			#搜索RSS的feed
+			#搜索自动处理的feed(字符串http开头)
 			feeds = []
+			#搜索手动处理的feed
+			mfeeds = []
 			ownfeeds = model.username2feeds(username)
 			if len(ownfeeds) != 0:
 				#取feeds信息
@@ -283,18 +283,22 @@ class Deliver(BaseHandler):
 				for book in books:
 					if book.f_id in ownfeeds:
 						b=[]
-						b.append(book.title)
-						b.append(book.url)
-						if book.isfulltext == 1:
-							b.append(True)
+						if cmp('http',book.url[0:4].lower()) == 0:
+							b.append(book.title)
+							b.append(book.url)
+							if book.isfulltext == 1:
+								b.append(True)
+							else:
+								b.append(False)
+							feeds.append(b)
 						else:
-							b.append(False)
-						feeds.append(b)
+							b.append(book.url)
+							mfeeds.append(b)
 				#取用户信息
 				user = model.getuser(username)[0]
 				#加入eq
 				if user and user.kindle_email:
-					jobq.enqueue(pushwork,user.kindle_email,feeds,user.keep_image)
+					jobq.enqueue(pushwork,user.kindle_email,feeds,mfeeds,user.keep_image)
 			return jjenv.get_template("autoback.html").render(nickname=session.username,title='Delivering',tips='books put to queue!')
 
 #=====================================================

@@ -229,7 +229,7 @@ class BaseFeedBook:
 		p{text-indent:2em;}
 		h1{font-weight:bold;}
 				</style>
-				</head><body>
+					</head><body>
 				%s
 				<p>%s</p>
 				</body></html>
@@ -270,7 +270,7 @@ class BaseFeedBook:
 
 			if result.code == 200 and result.content:
 				if self.feed_encoding:
-					content = result.content.decode(self.feed_encodig)
+					content = result.content.decode(self.feed_encoding)
 				else:
 					content = AutoDecoder(True).decode(result.content,url)
 				feed = feedparser.parse(content)#进行解析
@@ -355,13 +355,25 @@ class BaseFeedBook:
 	def readability(self,article,url,opts=None):
 		""" 使用readability-lxml处理全文信息 """
 		content = self.preprocess(article)
+#		print '--------------'
+#		print content
+#		print '---------------'
 		# 提取正文
-		doc = readability.Document(content)
-		summary = doc.summary(html_partial=False)
+		try:
+			doc = readability.Document(content)
+			summary = doc.summary(html_partial=True)
+		except:
+			self.log.warn('article is invalid.[%s]' % url)
+			return
+
 		title = doc.short_title()
 		title = self.processtitle(title)
+#		print '=================='
+#		print summary
+#		print '==================='
 
 		soup = BeautifulSoup(summary,'lxml')
+#	soup = BeautifulSoup(content,'lxml')
 		'''
 		#没有head
 		h = soup.find('head')
@@ -452,6 +464,9 @@ class BaseFeedBook:
 
 
 		self.soupprocessex(soup)
+#		print '====-=-=-=-=-=-=-='
+#		print soup
+#		print '-=-=-=-=-=-=-=-=-=-=-'
 		cc = soup.body.contents[0]
 #		cc.name = "articleblock"
 #		print cc
@@ -504,7 +519,7 @@ class BaseFeedBook:
 		title = self.processtitle(title)
 		soup.html.head.title.string = title
 
-		if self.keey_only_tags:
+		if self.keep_only_tags:
 			body = soup.new_tag('body')
 			try:
 				if isinstance(self.keep_only_tags, dict):

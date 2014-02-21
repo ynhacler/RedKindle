@@ -29,19 +29,24 @@ else:
 	#推送
 	for user in users:
 		feeds = []
+		mfeeds = []
 		ownfeeds = model.username2feeds(user.name)
 		if len(ownfeeds) != 0:
 			books = (model.get_allbooks())
 			for book in books:
 				if book.f_id in ownfeeds:
 					b=[]
-					b.append(book.title)
-					b.append(book.url)
-					if book.isfulltext == 1:
-						b.append(True)
+					if cmp('http',book.url[0:4].lower()) == 0:
+						b.append(book.title)
+						b.append(book.url)
+						if book.isfulltext == 1:
+							b.append(True)
+						else:
+							b.append(False)
+						feeds.append(b)
 					else:
-						b.append(False)
-					feeds.append(b)
+						b.append(book.url)
+						mfeeds.append(b)
 			if user and user.kindle_email:
-				q.enqueue(pushwork,user.kindle_email,feeds,user.keep_image)
+				q.enqueue(pushwork,user.kindle_email,feeds,mfeeds,user.keep_image)
 		print '-=end=-'

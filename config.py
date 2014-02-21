@@ -34,4 +34,4 @@ SrcEmail = "redkindle@zhred.net"
 ATTACH_FILENAME= 'redkindle_feed.mobi'
 
 #图片和的最大值
-MAX_PIC_SIZE = 6*1024
+MAX_PIC_SIZE = 10*1024#10M
