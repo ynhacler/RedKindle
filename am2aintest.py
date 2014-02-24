@@ -1,5 +1,4 @@
 # -*- coding:utf-8 -*-
-#test
 import os,re,urllib,urlparse,datetime,logging
 from datetime import date, timedelta
 from config import *
@@ -37,7 +36,7 @@ feeds5=[[u'nytimes','http://cn.nytimes.com/rss.html',True]]
 
 zzh = BaseFeedBook(log)
 zzh2 = ZhihuDaily(log)
-#zzh = DoubanBook(log)
+#zzh2 = DoubanBook(log)
 zzh.feeds = feeds5
 zzh.keep_image = False
 zzh2.keep_image = False
@@ -63,7 +62,7 @@ output_dir='/home/zzh/Desktop/temp/v3'
 
 ROOT = path.dirname(path.abspath(__file__))
 
-templates_env = Environment(loader=PackageLoader('amaintest', 'templates3'))
+templates_env = Environment(loader=PackageLoader('amaintest', 'templates2'))
 
 
 if __name__ == '__main__':
@@ -106,6 +105,7 @@ if __name__ == '__main__':
 					'title':title,
 					'description':brief,
 					'content':content,
+					'url':url,
 				}
 
 				data[i]['entries'].append(local_entry)
@@ -137,10 +137,14 @@ if __name__ == '__main__':
 	render_and_write('opf.xml', wrap, 'daily.opf', output_dir)
 	#/home/zzh/Desktop/temp/v3
 	for feed in data:
-		render_and_write('feed.html',feed,'%s.html' % feed['number'],output_dir)
+		for entry in feed['entries']:
+			render_and_write('feed.html',entry,'article_%s_%s.html' % (feed['number'],entry['number']),output_dir)
 
 	for name in listdir(path.join(ROOT, 'image')):
 		copy(path.join(ROOT, 'image', name), path.join(output_dir, name))
+
+	copy(path.join(ROOT, 'templates2', 'masthead.jpg'), path.join(output_dir, 'masthead.jpg'))
+	copy(path.join(ROOT, 'templates2', 'cover.jpg'), path.join(output_dir, 'cover.jpg'))
 
 	mobi(path.join(output_dir,'daily.opf'),path.join(ROOT,'kindlegen_1.1'))
 	#copytree(path.join(ROOT, 'image'), path.join(output_dir,'image'))

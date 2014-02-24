@@ -18,7 +18,9 @@
 	<item id="style" href="style.css" media-type="application/css" />
 	<item id="toc" media-type="application/xhtml+xml" href="toc.html"/>
 	{% for feed in feeds %}
-	<item id="item{{feed.number}}" media-type="application/xhtml+xml" href="{{feed.number}}.html"/>
+		{% for entry in feed.entries %}
+	<item id="item{{feed.number}}-{{entry.number}}" media-type="application/xhtml+xml" href="article_{{feed.number}}_{{entry.number}}.html"/>
+		{% endfor %}
 	{% endfor %}
 	{% for name in img_name %}
 	<item id="{{ name }}" href="{{ name }}" media-type="image/jpeg" />
@@ -28,13 +30,15 @@
   <spine toc="ncx">
    	 <itemref idref="toc" linear="no" />
  	 {% for feed in feeds %}
-	 <itemref idref="item{{feed.number}}"/>
+	 	{% for entry in feed.entries %}
+		<itemref idref="item{{feed.number}}-{{entry.number}}"/>
+		{% endfor %}
 	 {% endfor %}
   </spine>
 
   <guide>
   	 <reference type="toc" title="Table of Contents" href="toc.html"></reference>
 	 {# Make the TOC the first thing to read. #}
-	 <reference type="text" title="test zzzh guide" href="2.html"></reference>
+	 <reference type="text" title="test zzzh guide" href="article_2_1.html"></reference>
   </guide>
 </package>

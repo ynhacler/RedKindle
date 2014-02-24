@@ -102,7 +102,7 @@ def pushwork(email,feeds,mfeeds,ifimg):
 	data = []
 	feed_number = 1
 	entry_number = 0
-	play_order = 1
+	play_order = 0
 	#总的img计数
 	imgindex_temp = 0
 
@@ -111,7 +111,7 @@ def pushwork(email,feeds,mfeeds,ifimg):
 	ROOT = path.dirname(path.abspath(__file__))
 	output_dir = path.join(ROOT, 'temp')
 
-	templates_env = Environment(loader=PackageLoader('bmaintest', 'templates'))
+	templates_env = Environment(loader=PackageLoader('bmaintest', 'templates2'))
 
 	img_num = []
 
@@ -137,6 +137,7 @@ def pushwork(email,feeds,mfeeds,ifimg):
 					temp_sec = sec_or_media
 					feed_number += 1
 					play_order += 1
+					entry_number = 0
 					local = {
 						'number':feed_number,
 						'play_order':play_order,
@@ -155,6 +156,7 @@ def pushwork(email,feeds,mfeeds,ifimg):
 					'title':title,
 					'description':brief,
 					'content':content,
+					'url':url,
 				}
 
 				data[i]['entries'].append(local_entry)
@@ -179,7 +181,12 @@ def pushwork(email,feeds,mfeeds,ifimg):
 	render_and_write('opf.xml', wrap, 'daily.opf', output_dir,templates_env)
 	#/home/zzh/Desktop/temp/v3
 	for feed in data:
-		render_and_write('feed.html',feed,'%s.html' % feed['number'],output_dir,templates_env)
+		for entry in feed['entries']:
+			render_and_write('feed.html',entry,'article_%s_%    s.html' % (feed['number'],entry['number']),output_dir,templates_env)
+
+	#copy cover.jpg
+	copy(path.join(ROOT, 'templates2', 'masthead.jpg'), path.join(output_dir, 'masthead.jpg'))
+	copy(path.join(ROOT, 'templates2', 'cover.jpg'), path.join(output_dir, 'cover.jpg'))
 
 
 	#gen mobi

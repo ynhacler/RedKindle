@@ -19,15 +19,15 @@
 
 	    	{% for feed in feeds %}
 	    	<navPoint class="section" id="chapter_{{feed.number}}" playOrder="{{feed.play_order}}">
-			<navLabel><text>{{feed.title}}</text></navLabel>
-			<content src="{{feed.number}}.html"/>
+			<navLabel><text><![CDATA[{{feed.title}}]]></text></navLabel>
+			<content src="article_{{feed.number}}_1.html"/>
 	
 			{% for entry in feed.entries %}
-			<navPoint class="article" id="_{{feed.number}}.{{entry.number}}" playOrder="{{entry.play_order}}">
-	 			<navLabel><text>{{entry.title}}</text></navLabel>
-				<content src="{{feed.number}}.html#id_{{feed.number}}.{{entry.number}}"/>
-				<mbp:meta name="description">Deputy PM tel up to new commissioning consortiums</mbp:meta>
-			        <mbp:meta name="author">Nicholas Watt and Denis Campbell</mbp:meta>
+			<navPoint class="article" id="_{{feed.number}}_{{entry.number}}" playOrder="{{entry.play_order}}">
+	 			<navLabel><text><![CDATA[{{entry.title}}]]></text></navLabel>
+				<content src="article_{{feed.number}}_{{entry.number}}.html"/>
+				<mbp:meta name="description"><![CDATA[{{entry.description}}]]></mbp:meta>
+			        <mbp:meta name="author">-=test null=-</mbp:meta>
 			</navPoint>
 			{% endfor %}
 	    	</navPoint>

@@ -20,12 +20,12 @@
 	    	{% for feed in feeds %}
 	    	<navPoint class="section" id="chapter_{{feed.number}}" playOrder="{{feed.play_order}}">
 			<navLabel><text>{{feed.title}}</text></navLabel>
-			<content src="{{feed.number}}.html"/>
+			<content src="article_{{feed.number}}_1.html"/>
 	
 			{% for entry in feed.entries %}
-			<navPoint class="article" id="_{{feed.number}}.{{entry.number}}" playOrder="{{entry.play_order}}">
+			<navPoint class="article" id="_{{feed.number}}i_{{entry.number}}" playOrder="{{entry.play_order}}">
 	 			<navLabel><text>{{entry.title}}</text></navLabel>
-				<content src="{{feed.number}}.html#id_{{feed.number}}.{{entry.number}}"/>
+				<content src="article_{{feed.number}}_{{entry.number}}.html"/>
 				<mbp:meta name="description">Deputy PM tel up to new commissioning consortiums</mbp:meta>
 			        <mbp:meta name="author">Nicholas Watt and Denis Campbell</mbp:meta>
 			</navPoint>
