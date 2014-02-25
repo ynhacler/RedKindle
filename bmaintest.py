@@ -267,6 +267,18 @@ class Register(BaseHandler):
 		#返回登录界面
 		raise web.seeother(r'/')
 
+class FeedBack(BaseHandler):
+	def GET(self):
+		return jjenv.get_template("feedback.html").render(nickname=session.username,title='Feedback',current='feedback')
+
+class Test(BaseHandler):
+	def GET(self):
+		s = ''
+		for d in os.environ:
+			s += "<pre><p>" + str(d).rjust(28) + " | " + str(os.environ[d]) + "</p></pre>"
+		return s
+
+
 #推送
 class Deliver(BaseHandler):
 	def GET(self):
@@ -276,6 +288,7 @@ class Deliver(BaseHandler):
 			feeds = []
 			#搜索手动处理的feed
 			mfeeds = []
+			feeds_num = 0
 			ownfeeds = model.username2feeds(username)
 			if len(ownfeeds) != 0:
 				#取feeds信息
@@ -294,11 +307,12 @@ class Deliver(BaseHandler):
 						else:
 							b.append(book.url)
 							mfeeds.append(b)
+						feeds_num += 1
 				#取用户信息
 				user = model.getuser(username)[0]
 				#加入eq
 				if user and user.kindle_email:
-					jobq.enqueue(pushwork,user.kindle_email,feeds,mfeeds,user.keep_image)
+					jobq.enqueue(pushwork,args=(user.kindle_email,feeds,mfeeds,user.keep_image),timeout=feeds_num*300)
 			return jjenv.get_template("autoback.html").render(nickname=session.username,title='Delivering',tips='books put to queue!')
 
 #=====================================================
@@ -313,6 +327,8 @@ urls = (
 	"/deliver", "Deliver",
 	"/register","Register",
 	"/delfeed/(.*)","Deletefeed",
+	"/feedback", "FeedBack",
+	"/test", "Test",
 )
 
 app = web.application(urls,globals())

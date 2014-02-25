@@ -30,6 +30,7 @@ else:
 	for user in users:
 		feeds = []
 		mfeeds = []
+		feeds_num = 0
 		ownfeeds = model.username2feeds(user.name)
 		if len(ownfeeds) != 0:
 			books = (model.get_allbooks())
@@ -47,6 +48,7 @@ else:
 					else:
 						b.append(book.url)
 						mfeeds.append(b)
+					feeds_num += 1
 			if user and user.kindle_email:
-				q.enqueue(pushwork,user.kindle_email,feeds,mfeeds,user.keep_image)
+				q.enqueue(pushwork,args=(user.kindle_email,feeds,mfeeds,user.keep_image),timeout=feeds_num*300)
 		print '-=end=-'
