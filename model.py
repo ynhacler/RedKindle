@@ -125,7 +125,7 @@ def put_user_messgaes(k_id,kindle_email,send_time,enable_send,keep_image,timezon
 def get_current_push_users(hour):
 	try:
 		myvar = dict(hour=hour)
-		result = db.select('kinuser',myvar,where='send_time=timezone+$hour and enable_send = 1',_test=False)
+		result = db.select('kinuser',myvar,where='send_time=(timezone+$hour)%24 and enable_send = 1',_test=False)
 		return result
 	except:
 		return 0

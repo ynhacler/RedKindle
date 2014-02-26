@@ -9,6 +9,10 @@
 </div>
 {% endif %}
 
+<p>
+<span style="color:red">注意</span>：必须首先激活您的Kindle，同时请到亚马逊账户中心 <a href="https://www.amazon.cn/gp/digital/fiona/manage" rel="external">个人文档设置</a> 页面将 <strong>redkindle@zhred.net</strong> 加入 &quot;已认可的发件人电子邮箱列表(Your Kindle's approved email list)&quot;
+</p>
+
 <form id="set_frm" action="" method="post">
     {% if success %}
     {% if user and not user.kindle_email %}
@@ -21,7 +25,7 @@
     <fieldset id="kindle_fieldset">
         <legend>基本设置</legend>
         <p>
-            <label>Kindle E-mail("name"@free.kindle.com)<em class="required">*</em></label><br />
+            <label>Kindle E-mail("name"@kindle.cn)<em class="required">*</em></label><br />
             <input type="text" name="kindle_email" style="width:240px" value="{% if user and user.kindle_email %}{{ user.kindle_email }}{% endif %}" />{% if success and not user.kindle_email %}<em style="color:red;font-size:80%">此项不能为空</em>{% endif %}
         </p>
         <p>

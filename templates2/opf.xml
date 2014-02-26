@@ -38,6 +38,6 @@
   <guide>
   	 <reference type="toc" title="Table of Contents" href="toc.html"/>
 	 {# Make the TOC the first thing to read. #}
-	 <reference href="article_2_1.html" type="text" title="<![CDATA[{{feeds[0].entries[0].title}}]]>"/>
+	 <reference href="article_2_1.html" type="text" title="<![CDATA[]]>"/>
   </guide>
 </package>
