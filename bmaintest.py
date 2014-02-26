@@ -9,6 +9,7 @@ import os, datetime, logging, __builtin__, hashlib, time
 from collections import OrderedDict, defaultdict
 import gettext
 
+from os import path
 
 
 # for debug
@@ -39,7 +40,7 @@ from books.base import BaseFeedBook,  BaseUrlBook
 #使用rq任务队列
 from rq2 import Queue,use_connection
 from worker import conn
-from pushworker import pushwork
+from pushworker import pushwork,send_mail
 
 def local_time(fmt="%Y-%m-%d %H:%M", tz=TIMEZONE):
 	return (datetime.datetime.utcnow()+datetime.timedelta(hours=tz)).strftime(fmt)
@@ -284,6 +285,7 @@ class Deliver(BaseHandler):
 	def GET(self):
 		username = web.input().get('u')
 		if username:
+			'''
 			#搜索自动处理的feed(字符串http开头)
 			feeds = []
 			#搜索手动处理的feed
@@ -313,6 +315,13 @@ class Deliver(BaseHandler):
 				#加入eq
 				if user and user.kindle_email:
 					jobq.enqueue(pushwork,args=(user.kindle_email,feeds,mfeeds,user.keep_image),timeout=feeds_num*300)
+			'''
+			user = model.getuser(username)[0]
+			if user and user.kindle_email:
+				ROOT = path.dirname(path.abspath(__file__))
+				output_dir = path.join(ROOT, 'templates2')
+				mobi_file = path.join(output_dir,'WelcomeRedKindle.mobi')
+				jobq.enqueue(send_mail,SrcEmail,user.kindle_email,mobi_file)
 			return jjenv.get_template("autoback.html").render(nickname=session.username,title='Delivering',tips='books put to queue!')
 
 #=====================================================

@@ -17,7 +17,7 @@ import model
 
 from config import *
 
-
+print datetime.now()
 
 tz = pytz.timezone('GMT')
 date = datetime.now(tz)
