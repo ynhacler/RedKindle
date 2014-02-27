@@ -12,6 +12,7 @@ from bs4 import BeautifulSoup, Comment,NavigableString,CData,Tag
 from lib import feedparser
 from lib.readability import readability
 from lib.url_req import URLOpener
+from lib.img import rescale_image
 
 from config import *
 
@@ -42,7 +43,7 @@ class AutoDecoder:
 			except UnicodeDecodeError: # 解码错误，使用自动检测编码
 				encoding = chardet.detect(content)['encoding']
 				try:
-					result = content.decode(encoding,'ignore')
+					result = content.decode(encoding,'ignore')#show error,use : export LANG="en_US.UTF-8"
 				except UnicodeDecodeError: # 还是出错，则不转换，直接返回
 					self.encoding = None
 					result = content
@@ -328,6 +329,7 @@ class BaseFeedBook:
 			#如果是图片，title则是mime
 			for title, imgurl, imgfn, content, brief in readability(article,url,opts):
 				if title.startswith(r'image/'): #图片
+					content = rescale_image(content,reduceto=(400,600),graying=False)
 					yield (title, imgurl, imgfn, content, brief)
 				else:
 					if not title: title = ftitle

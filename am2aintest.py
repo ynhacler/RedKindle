@@ -35,17 +35,17 @@ feeds4=[[u'3lian','http://feed.36kr.com/c/33346/f/566026/index.rss']]
 feeds5=[[u'nytimes','http://cn.nytimes.com/rss.html',True]]
 
 zzh = BaseFeedBook(log)
-#zzh2 = ZhihuDaily(log)
-zzh2 = DoubanBook(log)
-zzh.feeds = feeds5
+zzh2 = ZhihuDaily(log)
+#zzh2 = DoubanBook(log)
+zzh.feeds = feeds4
 zzh.keep_image = False
 zzh2.keep_image = False
 #zzh.fulltext_by_readability = False
 #zzh.fulltext_by_instapaper = False
 
 zzhs = []
-#zzhs.append(zzh)
-zzhs.append(zzh2)
+zzhs.append(zzh)
+#zzhs.append(zzh2)
 #总的img计数
 imgindex_temp = 0
 

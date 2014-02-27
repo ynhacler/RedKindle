@@ -21,8 +21,7 @@ class ZhihuDaily(BaseFeedBook):
 	coverfile = "cv_zhihudaily.jpg"
 	fulltext_by_readability = False
 	fulltext_by_instapaper = False
-	keep_only_tags = [dict(name='h1', attrs={'class':'headline-title'}),
-	dict(name='div', attrs={'class':'question'})]
+	keep_only_tags = [dict(name='div', attrs={'class':'question'})]
 	remove_tags = []
 	remove_ids = []
 	remove_classes = ['view-more', 'avatar']
