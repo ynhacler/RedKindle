@@ -10,11 +10,11 @@
 {% endif %}
 
 <p>
-<span style="color:red">注意</span>：必须首先激活您的Kindle，同时请到亚马逊账户中心 <a href="https://www.amazon.cn/gp/digital/fiona/manage" rel="external">个人文档设置</a> 页面将 <strong>redkindle@zhred.net</strong> 加入 &quot;已认可的发件人电子邮箱列表(Your Kindle's approved email list)&quot;
+<span style="color:red">注意</span>：必须首先激活您的Kindle，同时请到亚马逊账户中心 <a href="https://www.amazon.cn/gp/digital/fiona/manage" rel="external">个人文档设置</a> 页面将<strong>redkindle@zhred.net</strong>加入 &quot;已认可的发件人电子邮箱列表(Your Kindle's approved email list)&quot;
 </p>
 
 <form id="set_frm" action="" method="post">
-    {% if success %}
+    {% if method %}
     {% if user and not user.kindle_email %}
     <strong class="error">Kindle E-mail必须填写！</strong>
     {% else %}
@@ -26,11 +26,12 @@
         <legend>基本设置</legend>
         <p>
             <label>Kindle E-mail("name"@kindle.cn)<em class="required">*</em></label><br />
-            <input type="text" name="kindle_email" style="width:240px" value="{% if user and user.kindle_email %}{{ user.kindle_email }}{% endif %}" />{% if success and not user.kindle_email %}<em style="color:red;font-size:80%">此项不能为空</em>{% endif %}
+            <input type="text" name="kindle_email" style="width:240px" value="{% if user and user.kindle_email %}{{ user.kindle_email }}{% endif %}" />
+	    {% if not user.kindle_email %}<em style="color:red;font-size:80%">此项不能为空</em>{% endif %}
         </p>
         <p>
             <input type="checkbox" name="enable_send" {% if user and user.enable_send %}checked{% endif %} />
-            <label style="color:red">使能自动定时投递</label>
+            <label >自动定时投递</label>
         </p>
         <p>
             <label>所在时区<em class="required">*</em></label>
@@ -61,8 +62,18 @@
         </p>
         
         <p>
-            <a id="testlink" href="/deliver?u={{nickname}}">投递测试</a><strong id="testmsg" class="error"></strong> 注意：投递需一段时间，更新内容越多所需时间越长
-        </p>        
+            <a id="testlink" href="/deliver?u={{nickname}}">投递测试</a><strong id="testmsg" class="error"></strong> 注意：(旧的期刊，只用于测试投递是否成功。) 
+        </p>
+
+	{% if user.level == 3 %}
+	<p>
+        	<a id="testlink" href="/deliver?u={{nickname}}&p=1">Admin投递测试</a><strong id="testmsg" class="error"></strong>
+	</p>
+	{% endif %}
+
+	<p>
+		注意：投递需一段时间，更新内容越多所需时间越长
+	</P>
     </fieldset>
     <p></p>
     <fieldset id="adv_fieldset">

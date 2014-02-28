@@ -44,21 +44,22 @@
         投递日志
         {% else %}
         <a style="font-weight:normal;" href="/logs">投递日志</a>
-        {% endif %}
+        {% endif %}-->
         <span style="color: #ccc;">&bull;</span>
         {% if current == "admin" %}
         账户管理
         {% else %}
         <a style="font-weight:normal;" href="/admin">账户管理</a>
-        {% endif %}-->
-        <span style="color: #ccc;">&bull;</span>
+        {% endif %}
+<!--        <span style="color: #ccc;">&bull;</span>
         {% if current == "feedback" %}
         反馈
         {% else %}
         <a style="font-weight:normal;" href="/feedback">反馈</a>
-        {% endif %}
+        {% endif %}i-->
         </h2>
     {% else %}
+    	<br/>
         <span style="text-align:center;padding:10px 10px;font-weight:normal;"><a href="/login">登陆</a></span>
 	<span style="color: #ccc;">&bull;</span>
 	<span style="text-align:center;padding:10px 10px;font-weight:normal;"><a href="/register">注册</a></span>

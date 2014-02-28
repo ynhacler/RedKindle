@@ -47,6 +47,9 @@ class AutoDecoder:
 				except UnicodeDecodeError: # 还是出错，则不转换，直接返回
 					self.encoding = None
 					result = content
+				except TypeError:
+					self.encoding = None
+					result = content
 				else:# 保存下次使用，以节省时间
 					self.encoding = encoding
 					#保存到redis
@@ -329,7 +332,10 @@ class BaseFeedBook:
 			#如果是图片，title则是mime
 			for title, imgurl, imgfn, content, brief in readability(article,url,opts):
 				if title.startswith(r'image/'): #图片
-					content = rescale_image(content,reduceto=(400,600),graying=False)
+					try:
+						content = rescale_image(content,reduceto=(400,600),graying=False)
+					except:
+						content = content
 					yield (title, imgurl, imgfn, content, brief)
 				else:
 					if not title: title = ftitle

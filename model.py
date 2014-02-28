@@ -59,6 +59,15 @@ def get_allbooks():
 	except:
 		return []
 
+#得到用户列表
+def get_all_users():
+	try:
+		result = db.select('kinuser')
+		return result
+	except:
+		return []
+
+
 #添加feed
 def put_feed(title,url,isfull):
 	db.insert('feeds', title=title,url=url,isfulltext=isfull)
@@ -112,11 +121,20 @@ def put_unsubscribe(k_id,id):
 		return 0
 
 #用户信息更新
-def put_user_messgaes(k_id,kindle_email,send_time,enable_send,keep_image,timezone):
+def put_user_messgaes(k_id,kindle_email,send_time=1,enable_send=0,keep_image=0,timezone=8):
 	#db.update('user', where='id=$id', vars={'id':100}, name='Michael', age=29)
 	try:
 		myvar = dict(k_id=k_id)
 		db.update('kinuser',where='k_id=$k_id',vars=myvar,kindle_email=kindle_email,send_time=send_time,enable_send=enable_send,keep_image=keep_image,timezone=timezone,_test=False)
+		return 1
+	except:
+		return 0
+
+#该密码
+def update_user_passwd(k_id,passwd):
+	try:
+		myvar = dict(k_id=k_id)
+		db.update('kinuser',where='k_id=$k_id',vars=myvar,passwd = passwd)
 		return 1
 	except:
 		return 0

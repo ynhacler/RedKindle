@@ -209,23 +209,46 @@ class Deletefeed(BaseHandler):
 
 		raise web.seeother('/my')
 
+#管理页面
+class Admin(BaseHandler):
+	def GET(self):
+		user = self.getcurrentuser()
+		users = model.get_all_users() if user.level == 3 else None #是管理员就得到用户列表
+		return jjenv.get_template('admin.html').render(nickname=session.username,title="Admin", current='admin', user=user, users=users)
+
+	def POST(self):
+		op,p1,p2 = web.input().get('op'), web.input().get('p1'), web.input().get('p2')
+		user = self.getcurrentuser()
+		users = model.get_all_users() if user.level == 3 else None
+		if op is not None and p1 is not None and p2 is not None: #修改密码
+			if user.passwd != hashlib.md5(op).hexdigest():
+				tips = "原密码错误！"
+			elif p1 != p2:
+				tips = "两次密码不一致！"
+			else:
+				tips = "修改成功！"
+				passwd = hashlib.md5(p1).hexdigest()
+				model.update_user_passwd(user.k_id,passwd)
+			return jjenv.get_template('admin.html').render(nickname=session.username,title="Admin",current='admin',user=user,users=users,chpwdtips=tips)
+		else:
+			return self.GET()
 
 #设置页面
 class Setting(BaseHandler):
-	def GET(self, success=False):
+	def GET(self,method=False):
 		user = self.getcurrentuser()
-		return jjenv.get_template('setting.html').render(nickname=session.username,title="Setting",current='setting',user=user,mail_sender=SrcEmail,success=success)
+		return jjenv.get_template('setting.html').render(nickname=session.username,title="Setting",current='setting',user=user,mail_sender=SrcEmail,method=method)
 
 	def POST(self):
 		user = self.getcurrentuser()
-		kindle_email = web.input().get('kindle_email')
+		kindle_email = web.input().get('kindle_email').strip()
 		timezone = int(web.input().get('timezone'))
 		send_time = (web.input().get('send_time'))
 		enable_send = int(bool(web.input().get('enable_send')))
 		keep_image = int(bool(web.input().get("keepimage")))
 
 		#用户信息设置
-		model.put_user_messgaes(user.k_id,kindle_email,send_time,enable_send,keep_image,timezone)
+		result = model.put_user_messgaes(user.k_id,kindle_email,send_time,enable_send,keep_image,timezone)
 		'''
 		print kindle_email
 		print send_time
@@ -234,6 +257,7 @@ class Setting(BaseHandler):
 		print timezone
 		'''
 		raise web.seeother('')#刷新
+		#return jjenv.get_template('setting.html').render(nickname=session.username,title="Setting",current='setting',user=user,mail_sender=SrcEmail,success=success)
 
 #注册
 class Register(BaseHandler):
@@ -284,8 +308,9 @@ class Test(BaseHandler):
 class Deliver(BaseHandler):
 	def GET(self):
 		username = web.input().get('u')
-		if username:
-			'''
+		adminpush = web.input().get('p')
+
+		if username and adminpush != None:#用于管理员测试
 			#搜索自动处理的feed(字符串http开头)
 			feeds = []
 			#搜索手动处理的feed
@@ -315,14 +340,15 @@ class Deliver(BaseHandler):
 				#加入eq
 				if user and user.kindle_email:
 					jobq.enqueue(pushwork,args=(user.kindle_email,feeds,mfeeds,user.keep_image),timeout=feeds_num*300)
-			'''
+			return jjenv.get_template("autoback.html").render(nickname=session.username,title='Delivering',tips='admin已投递！')
+		else:
 			user = model.getuser(username)[0]
 			if user and user.kindle_email:
 				ROOT = path.dirname(path.abspath(__file__))
 				output_dir = path.join(ROOT, 'templates2')
 				mobi_file = path.join(output_dir,'WelcomeRedKindle.mobi')
 				jobq.enqueue(send_mail,SrcEmail,user.kindle_email,mobi_file)
-			return jjenv.get_template("autoback.html").render(nickname=session.username,title='Delivering',tips='books put to queue!')
+			return jjenv.get_template("autoback.html").render(nickname=session.username,title='Delivering',tips='已投递！')
 
 #=====================================================
 urls = (
@@ -335,6 +361,7 @@ urls = (
 	"/setting", "Setting",
 	"/deliver", "Deliver",
 	"/register","Register",
+	"/admin","Admin",
 	"/delfeed/(.*)","Deletefeed",
 	"/feedback", "FeedBack",
 	"/test", "Test",
