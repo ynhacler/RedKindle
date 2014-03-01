@@ -54,14 +54,15 @@ border:1px dotted grey;
         <th class="usrh">序号</th><th class="usrh">用户名</th>
         <th class="usrh">使能发送</th>
 	<th class="usrh">kindle_email</th>
-        <th class="usrh">-</th><th class="usrh">-</th>
+        <th class="usrh">上次登录</th>
+	<th class="usrh">-</th>
         </tr>
         {% for u in users %}
         <tr class="usrrow">
         <th class="usrh">{{loop.index}}</th><th class="usrh">{{u.name}}</th>
         <th class="usrh">{{u.enable_send}}</th>
 	<th class="usrh">{{u.kindle_email}}</th>
-        <th class="usrh"><a href="/mgrpwd?u={{u.name}}">修改密码</a></th>
+        <th class="usrh">{{u.login_time}}</th>
         <th class="usrh"><a href="delaccount?u={{u.name}}">删除账户</a></th>
         </tr>
         {% endfor %}

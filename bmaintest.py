@@ -42,7 +42,8 @@ from rq2 import Queue,use_connection
 from worker import conn
 from pushworker import pushwork,send_mail
 
-def local_time(fmt="%Y-%m-%d %H:%M", tz=TIMEZONE):
+#%Y-%m-%d %H:%M:%S
+def local_time(fmt="%Y-%m-%d %H:%M:%S", tz=TIMEZONE):
 	return (datetime.datetime.utcnow()+datetime.timedelta(hours=tz)).strftime(fmt)
 
 def hide_email(email):
@@ -106,9 +107,12 @@ class Login(BaseHandler):
 			tips = "包含非法字符!"
 			return jjenv.get_template("login.html").render(nickname='',title='Login',tips=tips)
 		pwdhash = hashlib.md5(passwd).hexdigest()
+
 		if model.isuser(name,pwdhash) == 1:
 			session.login = 1
 			session.username = name
+			#Login_time
+			model.update_logintime(local_time(),name)
 			raise web.seeother(r'/')
 		else:
 			tips = "帐号不存在或密码错误!"
@@ -131,17 +135,21 @@ class MySubscription(BaseHandler):
 		#所有RSS源和已订阅的源
 		ownfeeds = model.userid2feeds(user.k_id) if user else None
 		books = list(model.get_allbooks())#webpy返回的是storage对象，用一次就不见了
-		return jjenv.get_template("my.html").render(nickname=session.username,current='my',title='My subscription',books=books,ownfeeds=ownfeeds,tips=tips,level=user.level)
+		category = list(model.get_category())
+		return jjenv.get_template("my.html").render(nickname=session.username,current='my',title='My subscription',books=books,ownfeeds=ownfeeds,tips=tips,level=user.level,cate=category)
 
 	def POST(self):#添加自定义RSS
 		user = self.getcurrentuser()
 		title = web.input().get('t')
 		url = web.input().get('url')
 		isfulltext = int(bool(web.input().get('full')))
+		description = web.input().get('descrip')
+		category = int(web.input().get('category'))
+
 		if not title or not url:
 			return self.GET('title or url is empty!')
 		#添加
-		model.put_feed(title,url,isfulltext)
+		model.put_feed(title,url,isfulltext,description,category)
 		raise web.seeother('/my')
 
 #订阅
@@ -276,7 +284,7 @@ class Register(BaseHandler):
 		if name.strip() == '' or passwd.strip() == '':
 			tips = "不能为空!"
 			return jjenv.get_template("register.html").render(nickname='',title='Register',tips=tips)
-		elif len(name) > 35:
+		elif len(name) > 50:
 			tips = "地址太长!"
 			return jjenv.get_template("register.html").render(nickname='',title='Register',tips=tips,username=name)
 		elif '<' in name or '>' in name or '&' in name:
@@ -290,7 +298,16 @@ class Register(BaseHandler):
 		model.input_user(name,hashlib.md5(passwd).hexdigest())
 
 		#返回登录界面
-		raise web.seeother(r'/')
+		#raise web.seeother(r'/')
+
+		#注册成功直接登录
+		pwdhash = hashlib.md5(passwd).hexdigest()
+		if model.isuser(name,pwdhash) == 1:
+			session.login = 1
+			session.username = name
+			raise web.seeother(r'/')
+		else:
+			return jjenv.get_template("register.html").render(nickname='',title='Register',tips="")
 
 class FeedBack(BaseHandler):
 	def GET(self):

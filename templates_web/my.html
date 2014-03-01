@@ -2,6 +2,9 @@
 
 {% block content %}
 
+<p>
+添加RSS，可以到<a href='http://www.douban.com/group/topic/49499883/' target='_blank'>豆瓣</a>留言。
+</p>
 
 <fieldset id="mybooks">
     <legend>已订阅</legend>
@@ -39,6 +42,16 @@
         </div>
         <div class="summaryRow">
             <input type="text" name="url" style="width:100%;"  placeholder="URL" />
+	    <textarea name='descrip' rows="3" cols="70" placeholder="简介"></textarea>
+	    
+	    <p>
+		<label>类型：</label>
+		<select class="bool" name="category">
+		{% for i in cate %}
+			<option value="{{ i.c_id }}">{{ i.category_name }}</option>
+		{% endfor %}
+		</select>
+	    </p>
         </div>
         {% if tips %}<p style="color:red;font-size:0.7em;">{{tips}}</p>{% endif %}
     </div>
@@ -60,7 +73,7 @@
 		{% endif %}
            	<a href="/subscribe/{{book.f_id}}" class="actionButton">订阅</a>
         </div>
-        <div class="summaryRow">{{book.description}}</div>
+        <div class="summaryRow">{{book.descrip}}</div>
     </div>
     {% do hasitem2.append(1) %}
     {% endif %}

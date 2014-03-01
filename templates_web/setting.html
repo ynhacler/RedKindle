@@ -10,7 +10,7 @@
 {% endif %}
 
 <p>
-<span style="color:red">注意</span>：必须首先激活您的Kindle，同时请到亚马逊账户中心 <a href="https://www.amazon.cn/gp/digital/fiona/manage" rel="external">个人文档设置</a> 页面将<strong>redkindle@zhred.net</strong>加入 &quot;已认可的发件人电子邮箱列表(Your Kindle's approved email list)&quot;
+<span style="color:red">注意</span>：必须首先激活您的Kindle，同时请到亚马逊账户中心 <a href="https://www.amazon.cn/gp/digital/fiona/manage" rel="external"  target="_blank">个人文档设置</a> 页面将<strong>redkindle@zhred.net</strong>加入 &quot;已认可的发件人电子邮箱列表(Your Kindle's approved email list)&quot;
 </p>
 
 <form id="set_frm" action="" method="post">
@@ -31,7 +31,7 @@
         </p>
         <p>
             <input type="checkbox" name="enable_send" {% if user and user.enable_send %}checked{% endif %} />
-            <label >自动定时投递</label>
+            <label style="color:red">自动定时投递</label>
         </p>
         <p>
             <label>所在时区<em class="required">*</em></label>
@@ -82,6 +82,9 @@
             <input type="checkbox" name="keepimage" {% if user and user.keep_image %}checked="1"{% endif %} />
             <label>保留文章图片（最大10M）</label>
         </p>
+	<p>
+		多看用户注意：多看服务器可接受最大文件为20M，如果多次无法收到推送，请退订一些杂志或取消图片。
+	</p>
     </fieldset>
     <p class="save_btn">
         <input type="submit" class="btn" value="保存设置" />
