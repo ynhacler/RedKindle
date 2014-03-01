@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ncx PUBLIC "-//NISO//DTD ncx 2005-1//EN" "http://www.daisy.org/z3986/2005/ncx-2005-1.dtd">
+<ncx xmlns:mbp="http://mobipocket.com/ns/mbp" xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="zh-CN">
+    <head>
+    	<meta name="dtb:uid" content="Book-feed-zzh-{{date}}"/>
+        <meta name="dtb:depth" content="2"/>
+        <meta name="dtb:totalPageCount" content="0"/>
+        <meta name="dtb:maxPageNumber" content="0"/>
+    </head>
+    <docTitle><text>RedKindle</text></docTitle>
+    <docAuthor><text>RedKindle</text></docAuthor>
+    <navMap>
+
+   	<navPoint class="periodical" id="periodical" playOrder="0">
+		<navLabel>
+			<text>目录</text>
+		</navLabel>
+        	<content src="toc.html"/>
+
+	    	{% for feed in feeds %}
+	    	<navPoint class="section" id="chapter_{{feed.number}}" playOrder="{{feed.play_order}}">
+			<navLabel><text>{{feed.title}}</text></navLabel>
+			<content src="{{feed.number}}.html"/>
+	
+			{% for entry in feed.entries %}
+			<navPoint class="article" id="_{{feed.number}}.{{entry.number}}" playOrder="{{entry.play_order}}">
+	 			<navLabel><text>{{entry.title}}</text></navLabel>
+				<content src="{{feed.number}}.html#id_{{feed.number}}.{{entry.number}}"/>
+				<mbp:meta name="description">Deputy PM tel up to new commissioning consortiums</mbp:meta>
+			        <mbp:meta name="author">Nicholas Watt and Denis Campbell</mbp:meta>
+			</navPoint>
+			{% endfor %}
+	    	</navPoint>
+	    	{% endfor %}
+
+    	</navPoint>
+
+    </navMap>
+</ncx>
