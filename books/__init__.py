@@ -26,4 +26,4 @@ for bkfile in os.listdir(os.path.dirname(__file__)):
 			bk = mbook.getBook()
 			RegisterFeed(bk)
 		except Exception as e:
-			default_log.warn("Feed '%s' import failed : %s" % (bookname,e))
+			print "Feed '%s' import failed : %s" % (bookname,e)

@@ -10,6 +10,8 @@ from shutil import copy,copytree
 from books.ZhihuDaily import ZhihuDaily
 from books.DoubanBook import DoubanBook
 from books.PaoPao import PaoPao
+from books.Economist import Economist
+
 
 def render_and_write(template_name, context, output_name, output_dir):
 	"""Render `template_name` with `context` and write the result in the file
@@ -37,20 +39,23 @@ feeds5=[[u'nytimes','http://cn.nytimes.com/rss.html',True]]
 
 zzh = BaseFeedBook(log)
 zzh2 = ZhihuDaily(log)
-#zzh2 = DoubanBook(log)
-zzh3 = PaoPao(log)
-print zzh3.ParseFeedUrls()
+zzh3= DoubanBook(log)
+zzh4 = PaoPao(log)
+zzh6 = Economist(log)
 
 zzh.feeds = feeds4
 zzh.keep_image = False
 zzh2.keep_image = False
 zzh3.keep_image = True
+zzh6.keep_image = False
 #zzh.fulltext_by_readability = False
 #zzh.fulltext_by_instapaper = False
 
+zzh6.ParseFeedUrls()
+
 zzhs = []
 #zzhs.append(zzh)
-zzhs.append(zzh3)
+zzhs.append(zzh6)
 #总的img计数
 imgindex_temp = 0
 
