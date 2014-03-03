@@ -105,7 +105,7 @@ CREATE TABLE `kinuser` (
   `passwd` varchar(40) DEFAULT NULL,
   `kindle_email` varchar(50) DEFAULT NULL,
   `enable_send` tinyint(1) DEFAULT '0',
-  `send_days` date DEFAULT NULL,
+  `send_days` int(4) DEFAULT '0',
   `send_time` int(10) unsigned DEFAULT '0',
   `expires` date DEFAULT NULL,
   `timezone` int(11) DEFAULT '8',
@@ -122,7 +122,7 @@ CREATE TABLE `kinuser` (
 
 LOCK TABLES `kinuser` WRITE;
 /*!40000 ALTER TABLE `kinuser` DISABLE KEYS */;
-INSERT INTO `kinuser` VALUES (1,'zzh','3fde6bb0541387e4ebdadf7c2ff31123','zzh123@126.com',1,NULL,17,NULL,-8,0,3,'2014-03-01 15:18:49'),(2,'zz@11.com','1q2w3e',NULL,0,NULL,0,NULL,8,0,0,NULL),(3,'zz@11.comaa','4124bc0a9335c27f086f24ba207a4912',NULL,0,NULL,0,NULL,8,0,0,NULL),(4,'11','6512bd43d9caa6e02c990b0a82652dca',NULL,0,NULL,0,NULL,8,0,0,NULL),(5,'1q','852301e1234000e61546c131345e8b8a','qqqq',0,NULL,0,NULL,8,0,0,NULL),(6,'zz@11.com','1q2w3e',NULL,0,NULL,0,NULL,8,0,0,NULL),(7,'qq','2327286446091a9cab0ecf56b7d196f4','zzh1989_14@kindle.cn',0,NULL,0,NULL,8,0,0,NULL),(8,'qqqqqqqqq','343b1c4a3ea721b2d640fc8700db0f36',NULL,0,NULL,0,NULL,8,0,0,NULL),(9,'hi@11.com','3fde6bb0541387e4ebdadf7c2ff31123',NULL,0,NULL,0,NULL,8,0,0,NULL);
+INSERT INTO `kinuser` VALUES (1,'zzh','3fde6bb0541387e4ebdadf7c2ff31123','zzh123@126.com',1,144,17,NULL,8,0,3,'2014-03-03 10:52:15'),(2,'zz@11.com','1q2w3e',NULL,0,0,0,NULL,8,0,0,NULL),(3,'zz@11.comaa','4124bc0a9335c27f086f24ba207a4912',NULL,0,0,0,NULL,8,0,0,NULL),(4,'11','6512bd43d9caa6e02c990b0a82652dca',NULL,0,0,0,NULL,8,0,0,NULL),(5,'1q','852301e1234000e61546c131345e8b8a','qqqq',0,0,0,NULL,8,0,0,NULL),(6,'zz@11.com','1q2w3e',NULL,0,0,0,NULL,8,0,0,NULL),(7,'qq','2327286446091a9cab0ecf56b7d196f4','zzh1989_14@kindle.cn',0,0,0,NULL,8,0,0,NULL),(8,'qqqqqqqqq','343b1c4a3ea721b2d640fc8700db0f36',NULL,0,0,0,NULL,8,0,0,NULL),(9,'hi@11.com','3fde6bb0541387e4ebdadf7c2ff31123',NULL,0,0,0,NULL,8,0,0,NULL);
 /*!40000 ALTER TABLE `kinuser` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -135,4 +135,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-02-28 23:26:13
+-- Dump completed on 2014-03-03  0:35:24
