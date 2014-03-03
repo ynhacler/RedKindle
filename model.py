@@ -166,13 +166,12 @@ def update_logintime(local_time,name):
 #查询当前时间的可推送用户
 def get_current_push_users(hour,weekday):
 	try:
-		if weekday == 0:
-			weekday = 7
+		weekday = int(bin(1)[2:]) << weekday
 		myvar = dict(hour=hour,weekday = weekday)
-		result = db.select('kinuser',myvar,where='send_time=(timezone+$hour)%24 and enable_send = 1 or send_days = 0 or ($weekday & send_days != 0) ',_test=False)
+		result = db.select('kinuser',myvar,where='send_time=(timezone+$hour)%24 and enable_send = 1 and (send_days = 0 or ($weekday & send_days != 0))',_test=False)
 		return result
 	except:
-		return 0
+		return []
 
 #插入新用户
 def input_user(user,passwd):
@@ -210,7 +209,7 @@ if __name__ == "__main__":
 #	print put_user_messgaes(1,'zzh@126.com',23,int(True),int(False),-12)
 #	print int(True)
 #	print username2feeds('zzh')
-	print get_current_push_users(9,7)[0]
+	print len(get_current_push_users(9,1))
 #	input_user('zz@11.com','1q2w3e')
 #	update_send_days(2,[4,7])
 #	print get_all_users()[0]

@@ -24,9 +24,9 @@ tz = pytz.timezone('GMT')
 date = datetime.now(tz)
 hour = date.hour
 
-tz = pytz.timezone('Asia/Shanghai')
-date = datetime.now(tz)
-weekday = date.weekday()
+tz2 = pytz.timezone('Asia/Shanghai')
+date2 = datetime.now(tz2)
+weekday = date2.isoweekday()#Mon 1: Sun 7
 
 users =  model.get_current_push_users(hour,weekday)
 if len(users) == 0:
