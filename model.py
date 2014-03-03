@@ -129,11 +129,19 @@ def put_unsubscribe(k_id,id):
 		return 0
 
 #用户信息更新
-def put_user_messgaes(k_id,kindle_email,send_time=1,enable_send=0,keep_image=0,timezone=8):
+def put_user_messgaes(k_id,kindle_email,send_time=1,enable_send=0,keep_image=0,timezone=8,days=[0]):
 	#db.update('user', where='id=$id', vars={'id':100}, name='Michael', age=29)
 	try:
 		myvar = dict(k_id=k_id)
-		db.update('kinuser',where='k_id=$k_id',vars=myvar,kindle_email=kindle_email,send_time=send_time,enable_send=enable_send,keep_image=keep_image,timezone=timezone,_test=False)
+		bin_re = 0
+                if u'0' not in days:
+			for d in days:
+				bin_temp = int(bin(1)[2:]) << int(d)
+				bin_re |= bin_temp
+		else:
+			bin_re = int(bin(0)[2:])
+
+		db.update('kinuser',where='k_id=$k_id',vars=myvar,kindle_email=kindle_email,send_time=send_time,enable_send=enable_send,keep_image=keep_image,timezone=timezone,send_days=bin_re,_test=False)
 		return 1
 	except:
 		return 0
@@ -156,10 +164,12 @@ def update_logintime(local_time,name):
 		return 0
 
 #查询当前时间的可推送用户
-def get_current_push_users(hour):
+def get_current_push_users(hour,weekday):
 	try:
-		myvar = dict(hour=hour)
-		result = db.select('kinuser',myvar,where='send_time=(timezone+$hour)%24 and enable_send = 1',_test=False)
+		if weekday == 0:
+			weekday = 7
+		myvar = dict(hour=hour,weekday = weekday)
+		result = db.select('kinuser',myvar,where='send_time=(timezone+$hour)%24 and enable_send = 1 or send_days = 0 or ($weekday & send_days != 0) ',_test=False)
 		return result
 	except:
 		return 0
@@ -167,6 +177,27 @@ def get_current_push_users(hour):
 #插入新用户
 def input_user(user,passwd):
 	db.insert('kinuser',name =user,passwd=passwd)
+
+#修改发送日期
+def update_send_days(k_id,days):
+	try:
+		myvar = dict(k_id=k_id)
+		bin_re = 0
+		if 0 not in days:
+			for d in days:
+				bin_temp = int(bin(1)[2:]) << d
+				bin_re |= bin_temp
+
+		db.update('kinuser',where='k_id=$k_id',vars=myvar,send_days = bin_re)
+		return 1
+	except:
+		return 0
+
+#取得发送日期
+def get_send_days(id):
+	myvar = dict(k_id=id)
+	result = db.select('kinuser',myvar,where='k_id=$k_id')
+	return result
 
 if __name__ == "__main__":
 #	print getuser(name='zzh')[0].passwd
@@ -179,5 +210,8 @@ if __name__ == "__main__":
 #	print put_user_messgaes(1,'zzh@126.com',23,int(True),int(False),-12)
 #	print int(True)
 #	print username2feeds('zzh')
-#	print get_current_push_users(19)[0]
-	input_user('zz@11.com','1q2w3e')
+	print get_current_push_users(9,7)[0]
+#	input_user('zz@11.com','1q2w3e')
+#	update_send_days(2,[4,7])
+#	print get_all_users()[0]
+#	print get_send_days(2)[0].send_days

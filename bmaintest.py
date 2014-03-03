@@ -245,6 +245,18 @@ class Admin(BaseHandler):
 class Setting(BaseHandler):
 	def GET(self,method=False):
 		user = self.getcurrentuser()
+
+		#days_convent
+		days = user.send_days
+		days_convent = []
+		if days == 0:
+			days_convent.append(0)
+		else:
+			for i in range(1,8):
+				if days & int(bin(1 << i),2) != 0:
+					days_convent.append(i)
+		user.send_days = days_convent
+
 		return jjenv.get_template('setting.html').render(nickname=session.username,title="Setting",current='setting',user=user,mail_sender=SrcEmail,method=method)
 
 	def POST(self):
@@ -254,16 +266,24 @@ class Setting(BaseHandler):
 		send_time = (web.input().get('send_time'))
 		enable_send = int(bool(web.input().get('enable_send')))
 		keep_image = int(bool(web.input().get("keepimage")))
+		send_days = web.input(optionday=[]).get('optionday')
+		if len(send_days) == 0:
+			send_days = [u'0']
+
 
 		#用户信息设置
-		result = model.put_user_messgaes(user.k_id,kindle_email,send_time,enable_send,keep_image,timezone)
+		#put_user_messgaes(k_id,kindle_email,send_time=1,enable_send=0,keep_image=0,timezone=8,days=[0])
+		result = model.put_user_messgaes(user.k_id,kindle_email,send_time,enable_send,keep_image,timezone,send_days)
+
 		'''
 		print kindle_email
 		print send_time
 		print enable_send
 		print keep_image
 		print timezone
+		print send_days
 		'''
+
 		raise web.seeother('')#刷新
 		#return jjenv.get_template('setting.html').render(nickname=session.username,title="Setting",current='setting',user=user,mail_sender=SrcEmail,success=success)
 

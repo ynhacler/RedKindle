@@ -52,6 +52,17 @@
                 <option value="{{ i }}" {% if user.send_time|int == i %}selected="selected"{% endif %}>{{ "%02.0f:00" % i }}</option>
                 {% endfor %}
             </select>
+	    <br/>
+	    |<input type="checkbox" name="optionday" value=0 {% if 0 in user.send_days %}checked='checked'{% endif %}>每天</input>|
+	    {% for d in range(1,8) %}
+	    	<input type="checkbox" name="optionday" value={{d}} {% if d in user.send_days %}checked='checked'{% endif %}>
+			{% if d == 7 %}
+				星期天
+			{% else %}
+				星期{{d}}
+			{% endif %}
+		</input>|
+	    {% endfor %}
         </p>
         <p>
             <label>投递格式<em class="required">*</em></label>

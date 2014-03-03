@@ -17,12 +17,18 @@ import model
 
 from config import *
 
+print '----------------------'
 print datetime.now()
 
 tz = pytz.timezone('GMT')
 date = datetime.now(tz)
 hour = date.hour
-users =  model.get_current_push_users(hour)
+
+tz = pytz.timezone('Asia/Shanghai')
+date = datetime.now(tz)
+weekday = date.weekday()
+
+users =  model.get_current_push_users(hour,weekday)
 if len(users) == 0:
 	print '-=end=-'
 else:
