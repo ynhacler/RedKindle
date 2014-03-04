@@ -29,11 +29,17 @@
     {% if nickname %}
         <h2 id="categoryHeader"> 
         {% if current == "my" %}
-        我的订阅
+        杂志
         {% else %}
-        <a style="font-weight:normal;" href="/my">我的订阅</a>
+        <a style="font-weight:normal;" href="/my">杂志</a>
         {% endif %}
         <span style="color: #ccc;">&bull;</span>
+	{% if current == "mysub" %}
+	我的订阅
+	{% else %}
+	<a style="font-weight:normal;" href="/mysub">我的订阅</a>
+	{% endif %}
+	<span style="color: #ccc;">&bull;</span>
         {% if current == "setting" %}
         设置
         {% else %}

@@ -152,9 +152,18 @@ class MySubscription(BaseHandler):
 		model.put_feed(title,url,isfulltext,description,category)
 		raise web.seeother('/my')
 
+#已经订阅的
+class MyExistSub(BaseHandler):
+	def GET(self,tips=None):
+		user = self.getcurrentuser()
+		ownfeeds = model.userid2feeds(user.k_id) if user else None
+		books = list(model.get_allbooks())#webpy返回的是storage对象，用一次就不见了
+		category = list(model.get_category())
+		return jjenv.get_template("mysub.html").render(nickname=session.username,current='mysub',title='My subscription',books=books,ownfeeds=ownfeeds,tips=tips,level=user.level,cate=category)
+
 #订阅
 class Subscribe(BaseHandler):
-	def GET(self, id):
+	def POST(self, id):
 		self.login_required()
 		if not id:
 			return "the id is empty!<br />"
@@ -172,11 +181,12 @@ class Subscribe(BaseHandler):
 		user = self.getcurrentuser()
 		model.put_subscribe(user.k_id,id)
 
-		raise web.seeother('/my')
+		#raise web.seeother('/my')
+		return 'ok'
 
 #取消订阅
 class Unsubscribe(BaseHandler):
-	def GET(self, id):
+	def POST(self, id):
 		self.login_required()
 		if not id:
 			return "the id is empty!<br />"
@@ -195,7 +205,8 @@ class Unsubscribe(BaseHandler):
 		user = self.getcurrentuser()
 		model.put_unsubscribe(user.k_id,id)
 
-		raise web.seeother('/my')
+		#raise web.seeother('/mysub')
+		return 'ok'
 
 #管理员删除feed
 class Deletefeed(BaseHandler):
@@ -219,15 +230,44 @@ class Deletefeed(BaseHandler):
 
 #管理页面
 class Admin(BaseHandler):
-	def GET(self):
+	def GET(self,page=1):
 		user = self.getcurrentuser()
-		users = model.get_all_users() if user.level == 3 else None #是管理员就得到用户列表
-		return jjenv.get_template('admin.html').render(nickname=session.username,title="Admin", current='admin', user=user, users=users)
+		#fen ye
+		if user.level == 3:
+			page = int(page)
+			perpage = 20
+			offset = (page - 1) * perpage
+			users = model.get_all_users(offset=offset,limit=perpage)
+			users_count = model.get_user_num()
+
+			pages = users_count.count / perpage
+
+			if users_count.count % perpage > 0:
+				pages += 1
+			if page > pages:
+				raise web.seeother('/admin')
+		else:
+			users = None
+			pages = 0
+
+		return jjenv.get_template('admin.html').render(nickname=session.username,title="Admin", current='admin', user=user, users=users, pages = pages)
 
 	def POST(self):
 		op,p1,p2 = web.input().get('op'), web.input().get('p1'), web.input().get('p2')
 		user = self.getcurrentuser()
-		users = model.get_all_users() if user.level == 3 else None
+		if user.level == 3:
+			page = 1
+			perpage = 20
+			offset = (page - 1) * perpage
+			users = model.get_all_users(offset=offset,limit=perpage)
+			users_count = model.get_user_num()
+			pages = users_count.count / perpage
+			if users_count.count % perpage > 0:
+				pages += 1
+		else:
+			users = None
+			pages = 0
+
 		if op is not None and p1 is not None and p2 is not None: #修改密码
 			if user.passwd != hashlib.md5(op).hexdigest():
 				tips = "原密码错误！"
@@ -237,7 +277,7 @@ class Admin(BaseHandler):
 				tips = "修改成功！"
 				passwd = hashlib.md5(p1).hexdigest()
 				model.update_user_passwd(user.k_id,passwd)
-			return jjenv.get_template('admin.html').render(nickname=session.username,title="Admin",current='admin',user=user,users=users,chpwdtips=tips)
+			return jjenv.get_template('admin.html').render(nickname=session.username,title="Admin",current='admin',user=user,users=users,chpwdtips=tips,pages = pages)
 		else:
 			return self.GET()
 
@@ -399,9 +439,11 @@ urls = (
 	"/deliver", "Deliver",
 	"/register","Register",
 	"/admin","Admin",
+	"/admin/page/(\d+)","Admin",
 	"/delfeed/(.*)","Deletefeed",
 	"/feedback", "FeedBack",
 	"/test", "Test",
+	"/mysub","MyExistSub",
 )
 
 app = web.application(urls,globals())

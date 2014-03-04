@@ -6,27 +6,6 @@
 添加RSS，可以到<a href='http://www.douban.com/group/topic/49499883/' target='_blank'>豆瓣</a>留言。
 </p>
 
-<fieldset id="mybooks">
-    <legend>已订阅</legend>
-    {% set hasitem = [] %}
-    {% for book in books %}
-    {% if book.f_id in ownfeeds %}
-    <div class="book">
-        <div class="titleRow">{{book.title}}</div>
-        <div class="cornerControls">
-            <a href="/unsubscribe/{{book.f_id}}" class="actionButton">退订</a>
-        </div>
-        <div class="summaryRow">{{book.description}}</div>
-    </div>
-    {% do hasitem.append(1) %}
-    {% endif %}
-    {% endfor %}
-    {% if not hasitem %}
-    <p style="font-size:0.8em;color:grey;">暂时没有已订阅的书籍</p>
-    {% endif %}
-</fieldset>
-<p></p>
-
 {% if level == 3 %}
 <fieldset id="ownfeeds">
     <legend>自定义RSS</legend>
@@ -71,7 +50,7 @@
 		{% if level == 3 %}
 			<a href="/delfeed/{{book.f_id}}" class="actionButton">删除</a>
 		{% endif %}
-           	<a href="/subscribe/{{book.f_id}}" class="actionButton">订阅</a>
+           	<a href="/subscribe/{{book.f_id}}" class="actionButton subscribeLink">订阅</a>
         </div>
         <div class="summaryRow">{{book.descrip}}</div>
     </div>
@@ -83,5 +62,48 @@
     {% endif %}
 </fieldset>
 
+<script src="http://dn-dogear.qbox.me/static/jquery-1.5.2.min.js?v=1.0"></script>
+<script type="text/javascript" charset="utf-8">
+$(document).ready(function(){
+
+$('.subscribeLink').click(function(){
+	if ($(this).hasClass("restoreButton")) {return};
+
+	$(this).html("订阅中");
+	ajax_request(this, '订阅失败', true, function(t){
+		$(t).removeClass("subscribeLink").addClass("restoreButton").html("已订阅");
+		});
+
+	return false;
+	});
+});
+
+function ajax_request(t, m, d, callback)
+{
+	var href = $(t).attr('href');
+	var url_parsed = /^\/subscribe\/([0-9]+)$/.exec(href);
+	var id = url_parsed[1];
+	if(!id) return false;
+	if (href == '' || href =='#')
+		return false
+	$(t).attr('href', '###');
+	//href = 'http://zhred.net'+href
+	$.post(href, { 'ajax': 1 },
+			function(data){
+				if(data == 'ok') {
+					if (callback)
+						callback(t)
+					else if (d != true)
+						$('#tableViewCell' + id).hide();
+					//$('.tableViewCell:last-child').addClass('tableViewCellLast');
+				} else {
+					alert(m);
+				}
+				return false;
+			}
+	      );
+	return false;
+}
+</script>
 
 {% endblock %}

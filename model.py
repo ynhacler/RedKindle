@@ -68,12 +68,19 @@ def get_category():
 		return []
 
 #得到用户列表
-def get_all_users():
+def get_all_users(offset,limit):
 	try:
-		result = db.select('kinuser')
+		result = db.select('kinuser',offset=offset,limit=limit)
 		return result
 	except:
 		return []
+
+#得到用户数
+def get_user_num():
+	try:
+		return db.query('select count(*) as count from kinuser')[0]
+	except:
+		return 0
 
 
 #添加feed
