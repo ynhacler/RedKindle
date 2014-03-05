@@ -46,7 +46,7 @@ apt-get install redis-server<br/>
 apt-get install python-redis<br/>
 pip install requests<br/>
 pip install redis<br/>
-pip install rq()<br/>
+pip install rq(简单的python任务队列，http://python-rq.org/)<br/>
 apt-get install libjpeg8-dev<br/>
 apt-get install libpng12-dev<br/>
 apt-get install libfreetype6-dev<br/>
