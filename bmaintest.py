@@ -40,7 +40,7 @@ from books.base import BaseFeedBook,  BaseUrlBook
 #使用rq任务队列
 from rq2 import Queue,use_connection
 from worker import conn
-from pushworker import pushwork,send_mail
+from pushworker import pushwork,send_mail,pushwork3
 
 #%Y-%m-%d %H:%M:%S
 def local_time(fmt="%Y-%m-%d %H:%M:%S", tz=TIMEZONE):
@@ -85,6 +85,10 @@ class Home(BaseHandler):
 	def GET(self):
 		return jjenv.get_template('home.html').render(nickname=session.username,title="Home")
 
+class Help():
+	def GET(self):
+		return jjenv.get_template('help.html').render()
+
 #登录
 class Login(BaseHandler):
 	def GET(self):
@@ -120,6 +124,55 @@ class Login(BaseHandler):
 			session.username = ''
 			return jjenv.get_template("login.html").render(nickname='',title='Login',tips=tips,username=name)
 
+#忘记密码后重置
+class ResetPW(BaseHandler):
+	def POST(self):
+		name = web.input().get('u').strip()
+		p1 = web.input().get('p1').strip()
+		p2 = web.input().get('p2').strip()
+
+		if p1 != p2:
+			tips = "两次输入不一致！"
+			return jjenv.get_template("reset_passwd.html").render(nickname=name,title='reset_passwd',tips=tips)
+
+		if len(p1)<4:
+			tips = "密码太短！"
+			return jjenv.get_template("reset_passwd.html").render(nickname=name,title='reset_passwd',tips=tips)
+
+		p1 = hashlib.md5(p1).hexdigest()
+		re = model.resetpw(name,p1)
+
+		if re == 1:
+			tips = "重置成功！"
+			return jjenv.get_template("forget_passwd.html").render(nickname='',title='forget_passwd',tips=tips)
+		else:
+			tips = "出错！"
+			return jjenv.get_template("reset_passwd.html").render(nickname=name,title='reset_passwd',tips=tips)
+
+#忘记密码
+class ForgetPW(BaseHandler):
+	def GET(self):
+		tips = "请输入邮箱地址和kindle地址。"
+		if session.login == 1:#是否登录
+			web.seeother(r'/')
+		else:
+			return jjenv.get_template("forget_passwd.html").render(nickname='',title='forget_passwd',tips=tips)
+
+	def POST(self):
+		name = web.input().get('u')
+		kindle_email = web.input().get('k')
+		#检查合法性
+		if name.strip() == '' or kindle_email.strip() == '' or len(kindle_email.strip())<3:
+			tips = "输入有误！"
+			return jjenv.get_template("forget_passwd.html").render(nickname='',title='forget_passwd',tips=tips)
+
+		if model.ifhasuser(name,kindle_email) == 1:
+			return jjenv.get_template("reset_passwd.html").render(nickname=name,title='reset_passwd')
+		else:
+			tips = "帐号不存在或输入错误!"
+			return jjenv.get_template("forget_passwd.html").render(nickname='',title='forget_passwd',tips=tips)
+
+
 #退出登录
 class Logout(BaseHandler):
 	def GET(self):
@@ -145,11 +198,26 @@ class MySubscription(BaseHandler):
 		isfulltext = int(bool(web.input().get('full')))
 		description = web.input().get('descrip')
 		category = int(web.input().get('category'))
+		update_cycle = web.input().get('up_t')
+		if update_cycle == '':
+			update_cycle = 6
+		else:
+			update_cycle = int(update_cycle)
 
 		if not title or not url:
 			return self.GET('title or url is empty!')
 		#添加
-		model.put_feed(title,url,isfulltext,description,category)
+		id = model.put_feed(title,url,isfulltext,description,category,update_cycle)
+
+		if id != -1:
+			#创建文件夹
+			ROOT = path.dirname(path.abspath(__file__))
+			output_dir = path.join(ROOT, 'temp')#%s' % id
+			output_dir = path.join(output_dir,'feed_%s' % id)
+			isExists = path.exists(output_dir)
+			if not isExists:
+				os.makedirs(output_dir)
+
 		raise web.seeother('/my')
 
 #已经订阅的
@@ -310,6 +378,14 @@ class Setting(BaseHandler):
 		if len(send_days) == 0:
 			send_days = [u'0']
 
+		test_code = ['<','>','*','#','%','&']
+		for t_c in test_code:
+			if t_c in kindle_email:
+				kindle_email = ''
+		if '@' not in kindle_email or '.' not in kindle_email or kindle_email.strip() == '':
+			kindle_email = ''
+			enable_send = 0
+
 
 		#用户信息设置
 		#put_user_messgaes(k_id,kindle_email,send_time=1,enable_send=0,keep_image=0,timezone=8,days=[0])
@@ -344,11 +420,17 @@ class Register(BaseHandler):
 		if name.strip() == '' or passwd.strip() == '':
 			tips = "不能为空!"
 			return jjenv.get_template("register.html").render(nickname='',title='Register',tips=tips)
+		elif '@' not in name or '.' not in name == '':
+			tips = "地址有误！"
+			return jjenv.get_template("register.html").render(nickname='',title='Register',tips=tips)
 		elif len(name) > 50:
 			tips = "地址太长!"
 			return jjenv.get_template("register.html").render(nickname='',title='Register',tips=tips,username=name)
 		elif '<' in name or '>' in name or '&' in name:
 			tips = "含有非法字符!"
+			return jjenv.get_template("register.html").render(nickname='',title='Register',tips=tips)
+		elif len(passwd.strip())<4:
+			tips = "密码太短！"
 			return jjenv.get_template("register.html").render(nickname='',title='Register',tips=tips)
 
 		u = model.getuser(name)
@@ -395,6 +477,7 @@ class Deliver(BaseHandler):
 			feeds_num = 0
 			ownfeeds = model.username2feeds(username)
 			if len(ownfeeds) != 0:
+				'''
 				#取feeds信息
 				books = (model.get_allbooks())
 				for book in books:
@@ -417,6 +500,10 @@ class Deliver(BaseHandler):
 				#加入eq
 				if user and user.kindle_email:
 					jobq.enqueue(pushwork,args=(user.kindle_email,feeds,mfeeds,user.keep_image),timeout=feeds_num*300)
+				'''
+				user = model.getuser(username)[0]
+				if user and user.kindle_email:
+					jobq.enqueue(pushwork3,args=(user.kindle_email,ownfeeds,user.keep_image))
 			return jjenv.get_template("autoback.html").render(nickname=session.username,title='Delivering',tips='admin已投递！')
 		else:
 			user = model.getuser(username)[0]
@@ -430,6 +517,7 @@ class Deliver(BaseHandler):
 #=====================================================
 urls = (
 	r"/", "Home",
+	"/help","Help",
 	"/login","Login",
 	"/logout", "Logout",
 	"/my", "MySubscription",
@@ -444,6 +532,8 @@ urls = (
 	"/feedback", "FeedBack",
 	"/test", "Test",
 	"/mysub","MyExistSub",
+	"/forget_passwd","ForgetPW",
+	"/reset_password","ResetPW",
 )
 
 app = web.application(urls,globals())

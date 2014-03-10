@@ -2,7 +2,7 @@
 
 from rq2 import Queue,use_connection
 from worker import conn
-from pushworker import pushwork
+from pushworker import pushwork,pushwork3
 from datetime import datetime
 import pytz
 
@@ -39,11 +39,13 @@ else:
 		feeds_num = 0
 		ownfeeds = model.username2feeds(user.name)
 		if len(ownfeeds) != 0:
+			'''
 			books = (model.get_allbooks())
 			for book in books:
 				if book.f_id in ownfeeds:
 					b=[]
 					if cmp('http',book.url[0:4].lower()) == 0:
+						#自动的feeds
 						b.append(book.title)
 						b.append(book.url)
 						if book.isfulltext == 1:
@@ -52,9 +54,13 @@ else:
 							b.append(False)
 						feeds.append(b)
 					else:
+						#手动的feeds
 						b.append(book.url)
 						mfeeds.append(b)
 					feeds_num += 1
 			if user and user.kindle_email:
 				q.enqueue(pushwork,args=(user.kindle_email,feeds,mfeeds,user.keep_image),timeout=feeds_num*300)
+			'''
+			if user and user.kindle_email:
+				q.enqueue(pushwork3,args=(user.kindle_email,ownfeeds,user.keep_image))
 		print '-=end=-'

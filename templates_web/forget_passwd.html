@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block bodytag %}
+<body onload="document.getElementById('username').focus();">
+{% endblock %}
+
+{% block menubar %}
+{% endblock %}
+
+{% block content %}
+    {% if tips %}
+    	<p style="color:red;font-size:0.8em;">{{tips}}</p>
+	 <a href="/login">登录</a>
+    {% endif %}
+    <p>忘记密码</p>
+    <form action="/forget_passwd" method="POST">
+    <table id="login" align='center'>
+	<tr>
+		<td>电子邮箱：</td>
+		<td><input type="text" name="u" id="username" /></td>
+	</tr>
+	<tr>
+		<td>kindle推送地址：</td>
+		<td><input type="text" name="k" id="kindle_email" /></td>
+	</tr>
+		 <td></td>
+		 <td><input type="submit" value="提交" onclick="javascript:return check();window.close();" target="_parent" /></td>
+	<tr>
+	</tr>
+
+    </table>
+    </form>
+    <pre><p> </p></pre>
+{% endblock %}
+

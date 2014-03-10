@@ -12,6 +12,9 @@
 <p>
 <span style="color:red">注意</span>：必须首先激活您的Kindle，同时请到亚马逊账户中心 <a href="https://www.amazon.cn/gp/digital/fiona/manage" rel="external"  target="_blank">个人文档设置</a> 页面将<strong>redkindle@zhred.net</strong>加入 &quot;已认可的发件人电子邮箱列表(Your Kindle's approved email list)&quot;
 </p>
+<a target="_blank" href="/help">
+设置帮助
+</a>
 
 <form id="set_frm" action="" method="post">
     {% if method %}
@@ -27,7 +30,7 @@
         <p>
             <label>Kindle E-mail("name"@kindle.cn)<em class="required">*</em></label><br />
             <input type="text" name="kindle_email" style="width:240px" value="{% if user and user.kindle_email %}{{ user.kindle_email }}{% endif %}" />
-	    {% if not user.kindle_email %}<em style="color:red;font-size:80%">此项不能为空</em>{% endif %}
+	    {% if not user.kindle_email %}<em style="color:red;font-size:80%">输入有误！</em>{% endif %}
         </p>
         <p>
             <input type="checkbox" name="enable_send" {% if user and user.enable_send %}checked{% endif %} />

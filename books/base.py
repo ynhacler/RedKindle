@@ -453,7 +453,7 @@ class BaseFeedBook:
 					imgtype = imghdr.what(None, imgcontent)
 					if imgtype:
 						imgmime = r"image/" + imgtype
-						fnimg = "img%d.%s" % (self.imgindex, 'jpg' if imgtype=='jpeg' else imgtype)
+						fnimg = "img%s_%d.%s" % (datetime.datetime.now().strftime("%Y%m%d_%H%M%S"),self.imgindex, 'jpg' if imgtype=='jpeg' else imgtype)
 						img['src'] = fnimg
 						yield (imgmime, imgurl, fnimg, imgcontent, None)
 					else:
@@ -599,7 +599,7 @@ class BaseFeedBook:
 					imgtype = imghdr.what(None, imgcontent)
 					if imgtype:
 						imgmime = r"image/" + imgtype
-						fnimg = "img%d.%s" % (self.imgindex, 'jpg' if imgtype=='jpeg' else imgtype)
+						fnimg = "img%s_%d.%s" % (datetime.datetime.now().strftime("%Y%m%d_%H%M%S"),self.imgindex, 'jpg' if imgtype=='jpeg' else imgtype)
 						img['src'] = fnimg
 						yield (imgmime, imgurl, fnimg, imgcontent, None)
 					else:
@@ -760,7 +760,7 @@ class WebpageBook(BaseFeedBook):
 						imgtype = imghdr.what(None, imgcontent)
 						if imgtype:
 							imgmime = r"image/" + imgtype
-							fnimg = "img%d.%s" % (self.imgindex, 'jpg' if imgtype=='jpeg' else imgtype)
+							fnimg = "img%s_%d.%s" % (datetime.datetime.now().strftime("%Y%m%d_%H%M%S"),self.imgindex, 'jpg' if imgtype=='jpeg' else imgtype)
 							img['src'] = fnimg
 							yield (imgmime, imgurl, fnimg, imgcontent, None)
 						else:

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block bodytag %}
+<body onload="document.getElementById('username').focus();">
+{% endblock %}
+
+{% block menubar %}
+{% endblock %}
+
+{% block content %}
+    {% if tips %}
+         <p style="color:red;font-size:0.8em;">{{tips}}</p>
+	{% endif %}
+	<p>重置密码</p>
+	<form action="/reset_password" method="POST">
+	<table id="login" align='center'>
+	<tr>
+		<td>新密码：</td>
+		<td><input type="password" name="p1" id="password" /></td>
+	</tr>
+	<tr>
+		<td>再次输入：</td>
+		<td><input type="password" name="p2" id="password" /></td>
+	</tr>
+	<tr>
+		<td><input type="hidden" value="{{nickname}}" name="u"/></td>
+		<td><input type="submit" value="提交" onclick="javascript:return check();window.close();" target="_parent" /></td>
+	</tr>
+	</table>
+	</form>
+	 <pre><p> </p></pre>
+{% endblock %}
+

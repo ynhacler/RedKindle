@@ -13,7 +13,7 @@ class DoubanBook(BaseFeedBook):
 	title = u'豆瓣最受欢迎的书评'
 	description = u'豆瓣成员投票选出的最佳书评'
 	network_timeout = 60
-	oldest_article        = 20
+	oldest_article        = 40
 	language = 'zh-cn'
 	feed_encoding = "utf-8"
 	page_encoding = "utf-8"

@@ -4,7 +4,7 @@ import web
 import datetime
 
 #链接数据库
-db = web.database(dbn='mysql',db='redkindle',user='root',pw='1q2w3e')
+db = web.database(dbn='mysql',db='redkindle',user='root',pw='1q2w3e',charset='utf8')
 
 #是否有此用户
 def isuser(name,pw):
@@ -26,6 +26,19 @@ def getuser(name):
 		return result
 	except:
 		return None
+
+#是否存在次用户
+def ifhasuser(name,kindle_email):
+	try:
+		myvar = dict(name=name,ke=kindle_email+'%')
+		#result = db.select('kinuser',myvar,where ="name = $name and kindle_email like \%$ke\%",_test=False)
+		result = db.query("SELECT * FROM kinuser WHERE name = $name and kindle_email like $ke",vars=myvar)
+		if len(result) > 0:
+			return 1
+		else:
+			return 0
+	except IndexError:
+		return 0
 
 #得到对应用户的feeds
 def userid2feeds(user_id):
@@ -84,8 +97,12 @@ def get_user_num():
 
 
 #添加feed
-def put_feed(title,url,isfull,descrip,cate):
-	db.insert('feeds', title=title,url=url,isfulltext=isfull,descrip=descrip,c_id=cate)
+def put_feed(title,url,isfull,descrip,cate,update_cycle=6):
+	try:
+		re_id = db.insert('feeds', title=title,url=url,isfulltext=isfull,descrip=descrip,c_id=cate,update_cycle=update_cycle)
+		return re_id
+	except:
+		return -1
 
 #删除feed
 def delete_feed(id):
@@ -97,6 +114,15 @@ def delete_feed(id):
 	#feed_user
 		db.delete('feeds_user', where=web.db.sqlwhere(myvar))
                 return 1
+	except:
+		return 0
+
+#删除旧文章
+def delete_old_article(id):
+	try:
+		myvar = dict(f_id=id)
+		db.delete('rss_gain', where=web.db.sqlwhere(myvar))
+		return 1
 	except:
 		return 0
 
@@ -161,6 +187,16 @@ def update_user_passwd(k_id,passwd):
 		return 1
 	except:
 		return 0
+
+#重置密码
+def resetpw(name,p1):
+	try:
+		myvar = dict(name=name)
+		db.update('kinuser',where='name=$name',vars=myvar,passwd = p1)
+		return 1
+	except:
+		return 0
+
 #登录时间	
 def update_logintime(local_time,name):
 	try:
@@ -205,6 +241,35 @@ def get_send_days(id):
 	result = db.select('kinuser',myvar,where='k_id=$k_id')
 	return result
 
+#把文章放入mysql
+def put_section_article(f_id,sec_or_media, url,title, content,brief):
+	try:
+		db.insert('rss_gain',f_id=f_id,
+			time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+			section=sec_or_media,
+			url=url,
+			title=title,
+			content=content,
+			brief=brief)
+	except:
+		return 0
+
+#改变文章更新时间
+def update_article_update_time(f_id):
+	try:
+		myvar = dict(f_id=f_id)
+		db.update('feeds',where='f_id=$f_id',vars=myvar,last_update=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+		return 1
+	except:
+		return 0
+
+#得到文章
+def get_article2id(feed_id):
+	myvar = dict(f_id=feed_id)
+	result = db.select('rss_gain',myvar,where='f_id=$f_id')
+	return result
+
+
 if __name__ == "__main__":
 #	print getuser(name='zzh')[0].passwd
 #	print userid2feeds(2)
@@ -216,8 +281,10 @@ if __name__ == "__main__":
 #	print put_user_messgaes(1,'zzh@126.com',23,int(True),int(False),-12)
 #	print int(True)
 #	print username2feeds('zzh')
-	print len(get_current_push_users(9,1))
+#	print len(get_current_push_users(9,1))
 #	input_user('zz@11.com','1q2w3e')
 #	update_send_days(2,[4,7])
 #	print get_all_users()[0]
 #	print get_send_days(2)[0].send_days
+	print ifhasuser('qq','zzh')
+#	print resetpw('zz12@11.com','1q2w3e')
