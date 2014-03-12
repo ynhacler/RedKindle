@@ -44,6 +44,8 @@ pip install jinja2<br/>
 apt-get install python-lxml<br/>
 apt-get install redis-server<br/>
 apt-get install python-redis<br/>
+pip install python-memcached<br/>
+apt-get install memcached<br/>
 pip install requests<br/>
 pip install redis<br/>
 pip install rq(简单的python任务队列，http://python-rq.org/)<br/>

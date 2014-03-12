@@ -8,6 +8,7 @@ __Author__ = "ynhacler"
 import os, datetime, logging, __builtin__, hashlib, time
 from collections import OrderedDict, defaultdict
 import gettext
+import memcache
 
 from os import path
 
@@ -538,7 +539,26 @@ urls = (
 
 app = web.application(urls,globals())
 
-session =  web.session.Session(app, web.session.DiskStore('sessions'),initializer={'username':'','login':0})
+#缓存设置
+class MemCacheStore(web.session.Store):#特别注意是这，重载了下web.py的 Store类，来实现memcached的操作
+	mc = None
+	def __init__(self):
+		self.mc = memcache.Client(['127.0.0.1:11211'], debug=0)
+	def __contains__(self, key):
+		return self.mc.get(key) != None
+	def __getitem__(self, key):
+		return self.mc.get(key)
+	def __setitem__(self, key, value):
+		self.mc.set(key, value, time = web.config.session_parameters["timeout"])
+	def __delitem__(self, key):
+		self.mc.delete(key)
+	def cleanup(self, timeout):
+		pass # Not needed as we assigned the timeout to memcache
+
+#memcache
+session = web.session.Session(app, MemCacheStore(),initializer={'username':'','login':0})
+#普通
+#session = web.session.Session(app, web.session.DiskStore('sessions'),initializer={'username':'','login':0})
 
 jjenv = jinja2.Environment(loader=jinja2.FileSystemLoader('templates_web'),extensions=["jinja2.ext.do",])
 

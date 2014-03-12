@@ -41,7 +41,7 @@ class URLOpener:
 				response.realurl = req.url
 			except:
 				cnt += 1
-				time.sleep(1)
+				time.sleep(0.3)
 			else:
 				break
 

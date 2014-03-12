@@ -2,9 +2,20 @@
 
 import web
 import datetime
+import memcache,hashlib
 
 #链接数据库
 db = web.database(dbn='mysql',db='redkindle',user='root',pw='1q2w3e',charset='utf8')
+
+#缓存
+memc = memcache.Client(['127.0.0.1:11211'],debug=0)
+
+#建立一个简单hash算法函数
+def hash(obj):
+	m=hashlib.md5()
+	m.update(obj)
+	key=m.hexdigest()
+	return key
 
 #是否有此用户
 def isuser(name,pw):
@@ -21,8 +32,11 @@ def isuser(name,pw):
 #用户查询
 def getuser(name):
 	try:
-		myvar = dict(name=name)
-		result = db.select('kinuser',myvar,where='name = $name')
+		result = memc.get(hash('kinuser%s' % name))
+		if not result:
+			myvar = dict(name=name)
+			result = list(db.select('kinuser',myvar,where='name = $name'))
+			memc.add(hash('kinuser%s' % name),result,time=60*5)
 		return result
 	except:
 		return None
@@ -67,15 +81,21 @@ def username2feeds(username):
 #得到所有feeds信息
 def get_allbooks():
 	try:
-		result = db.select('feeds')
-		return result
+		value = memc.get(hash('feeds'))
+		if not value:
+			value = list(db.select('feeds'))
+			memc.add(hash('feeds'),value,time=60*5)
+		return value
 	except:
 		return []
 
 #等到类别信息
 def get_category():
 	try:
-		result = db.select('category')
+		result = memc.get(hash('cate'))
+		if not result:
+			result = list(db.select('category'))
+			memc.add(hash('cate'),result,time=60*60*5)
 		return result
 	except:
 		return []
@@ -91,7 +111,11 @@ def get_all_users(offset,limit):
 #得到用户数
 def get_user_num():
 	try:
-		return db.query('select count(*) as count from kinuser')[0]
+		result = memc.get(hash('count'))
+		if not result:
+			result = db.query('select count(*) as count from kinuser')[0]
+			memc.add(hash('count'),result,time=60*60)
+		return result
 	except:
 		return 0
 
@@ -113,6 +137,7 @@ def delete_feed(id):
                 db.delete('feeds', where=web.db.sqlwhere(myvar))
 	#feed_user
 		db.delete('feeds_user', where=web.db.sqlwhere(myvar))
+		memc.delete(hash('feeds'),time=2)
                 return 1
 	except:
 		return 0
@@ -265,15 +290,21 @@ def update_article_update_time(f_id):
 
 #得到文章
 def get_article2id(feed_id):
-	myvar = dict(f_id=feed_id)
-	result = db.select('rss_gain',myvar,where='f_id=$f_id')
-	return result
+	try:
+		result = memc.get(hash('rss_gain%s' % feed_id))
+		if not result:
+			myvar = dict(f_id=feed_id)
+			result = list(db.select('rss_gain',myvar,where='f_id=$f_id'))
+			qq=memc.add(hash('rss_gain%s' % feed_id),result,time=60*5)
+		return result
+	except:
+		return []
 
 
 if __name__ == "__main__":
-#	print getuser(name='zzh')[0].passwd
+	print getuser(name='zzh')[0].passwd
 #	print userid2feeds(2)
-#	print get_allbooks()[1]
+#	print list(get_allbooks())
 #	put_feed('aa','aaa')
 #	print ifhasbook(100)
 #	print put_subscribe(1,2)
@@ -286,5 +317,10 @@ if __name__ == "__main__":
 #	update_send_days(2,[4,7])
 #	print get_all_users()[0]
 #	print get_send_days(2)[0].send_days
-	print ifhasuser('qq','zzh')
+#	print ifhasuser('qq','zzh')
 #	print resetpw('zz12@11.com','1q2w3e')
+#memc.set('foo','bar')
+#	print memc.get('foo')
+#	print get_category()
+#	print get_user_num()
+#	get_article2id(17)

@@ -11,6 +11,9 @@ from books.ZhihuDaily import ZhihuDaily
 from books.DoubanBook import DoubanBook
 from books.PaoPao import PaoPao
 from books.Economist import Economist
+from books.AnBang import AnBang
+from books.Qiushibaike import Qiushibaike
+from books.Lianhezaobao import Lianhezaobao
 
 
 def render_and_write(template_name, context, output_name, output_dir):
@@ -35,27 +38,29 @@ feeds=[[u'163easynet',"http://www.xinhuanet.com/ent/news_ent.xml"],
 feeds2=[[u'XXXzzhXXX',"http://www.sciencenet.cn/xml/news.aspx?news=0"]]
 feeds3=[[u'163easynet',"http://www.xinhuanet.com/ent/news_ent.xml"]]
 feeds4=[[u'3lian','http://feed.36kr.com/c/33346/f/566026/index.rss']]
-feeds5=[[u'nytimes','http://cn.nytimes.com/rss.html',True]]
+feeds5=[[u'nytimes','http://blog.sina.com.cn/rss/sciam.xml',True]]
 
 zzh = BaseFeedBook(log)
 zzh2 = ZhihuDaily(log)
 zzh3= DoubanBook(log)
 zzh4 = PaoPao(log)
 zzh6 = Economist(log)
+zzh7 = AnBang(log)
+zzh8 = Qiushibaike(log)
+zzh9 = Lianhezaobao(log)
 
-zzh.feeds = feeds4
+zzh.feeds = feeds5
 zzh.keep_image = False
 zzh2.keep_image = False
 zzh3.keep_image = True
-zzh6.keep_image = False
+zzh8.keep_image = False
 #zzh.fulltext_by_readability = False
 #zzh.fulltext_by_instapaper = False
 
-zzh6.ParseFeedUrls()
+#print zzh9.ParseFeedUrls()
 
 zzhs = []
-#zzhs.append(zzh)
-zzhs.append(zzh6)
+zzhs.append(zzh9)
 #总的img计数
 imgindex_temp = 0
 
