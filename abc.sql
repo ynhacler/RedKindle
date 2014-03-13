@@ -56,7 +56,7 @@ CREATE TABLE `feeds` (
   `last_update` datetime DEFAULT NULL,
   `update_cycle` int(5) DEFAULT '3',
   PRIMARY KEY (`f_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,7 +65,7 @@ CREATE TABLE `feeds` (
 
 LOCK TABLES `feeds` WRITE;
 /*!40000 ALTER TABLE `feeds` DISABLE KEYS */;
-INSERT INTO `feeds` VALUES (16,'Engadget 中国版','http://cn.engadget.com/rss.xml',1,1,'','2014-03-09 23:51:33',2),(17,'adsdadadad','DoubanBook',0,1,'','2014-03-10 01:06:19',4);
+INSERT INTO `feeds` VALUES (16,'Engadget 中国版','http://cn.engadget.com/rss.xml',1,1,'','2014-03-09 23:51:33',2),(18,'sdfsaf','sdf',0,1,'sadfaa',NULL,1),(19,'cvvvvv','ccccccc',1,1,'cccccccccccccccccc',NULL,4);
 /*!40000 ALTER TABLE `feeds` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -81,7 +81,7 @@ CREATE TABLE `feeds_user` (
   `k_id` int(10) unsigned DEFAULT NULL,
   `f_id` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -90,7 +90,7 @@ CREATE TABLE `feeds_user` (
 
 LOCK TABLES `feeds_user` WRITE;
 /*!40000 ALTER TABLE `feeds_user` DISABLE KEYS */;
-INSERT INTO `feeds_user` VALUES (34,1,16),(35,1,17);
+INSERT INTO `feeds_user` VALUES (36,1,16);
 /*!40000 ALTER TABLE `feeds_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -114,6 +114,7 @@ CREATE TABLE `kinuser` (
   `keep_image` tinyint(1) DEFAULT '0',
   `level` int(1) unsigned DEFAULT '0',
   `login_time` datetime DEFAULT NULL,
+  `ifmobi` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`k_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -124,7 +125,7 @@ CREATE TABLE `kinuser` (
 
 LOCK TABLES `kinuser` WRITE;
 /*!40000 ALTER TABLE `kinuser` DISABLE KEYS */;
-INSERT INTO `kinuser` VALUES (1,'zzh','3fde6bb0541387e4ebdadf7c2ff31123','zzh123@126.com',1,150,16,NULL,8,1,3,'2014-03-10 14:45:15'),(2,'zz@11.com','1q2w3e',NULL,0,0,0,NULL,8,0,0,NULL),(3,'zz@11.comaa','4124bc0a9335c27f086f24ba207a4912',NULL,0,0,0,NULL,8,0,0,NULL),(4,'11','6512bd43d9caa6e02c990b0a82652dca',NULL,0,0,0,NULL,8,0,0,NULL),(5,'1q','852301e1234000e61546c131345e8b8a','qqqq',0,0,0,NULL,8,0,0,NULL),(6,'zz@11.com','1q2w3e',NULL,0,0,0,NULL,8,0,0,NULL),(7,'qq','qqqq','zzh1989_14@kindle.cn',0,0,0,NULL,8,0,0,NULL),(8,'qqqqqqqqq','343b1c4a3ea721b2d640fc8700db0f36',NULL,0,0,0,NULL,8,0,0,NULL),(9,'hi@11.com','3fde6bb0541387e4ebdadf7c2ff31123',NULL,0,0,0,NULL,8,0,0,NULL),(10,'test','098f6bcd4621d373cade4e832627b4f6',NULL,0,0,0,NULL,8,0,0,'2014-03-04 10:44:38'),(11,'qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq','c341c584fbe3fe5775b568be53d0c315',NULL,0,0,0,NULL,8,0,0,NULL),(12,'zz12@11.com','3fde6bb0541387e4ebdadf7c2ff31123','zzh123@126.com',0,0,0,NULL,8,0,0,'2014-03-10 10:25:54');
+INSERT INTO `kinuser` VALUES (1,'zzh','3fde6bb0541387e4ebdadf7c2ff31123','zzh123@126.com',0,166,16,NULL,8,0,3,'2014-03-13 16:43:58',0),(2,'zz@11.com','1q2w3e',NULL,0,0,0,NULL,8,0,0,NULL,1),(3,'zz@11.comaa','4124bc0a9335c27f086f24ba207a4912',NULL,0,0,0,NULL,8,0,0,NULL,1),(4,'11','6512bd43d9caa6e02c990b0a82652dca',NULL,0,0,0,NULL,8,0,0,NULL,1),(5,'1q','852301e1234000e61546c131345e8b8a','qqqq',0,0,0,NULL,8,0,0,NULL,1),(6,'zz@11.com','1q2w3e',NULL,0,0,0,NULL,8,0,0,NULL,1),(7,'qq','qqqq','zzh1989_14@kindle.cn',0,0,0,NULL,8,0,0,NULL,1),(8,'qqqqqqqqq','343b1c4a3ea721b2d640fc8700db0f36',NULL,0,0,0,NULL,8,0,0,NULL,1),(9,'hi@11.com','3fde6bb0541387e4ebdadf7c2ff31123',NULL,0,0,0,NULL,8,0,0,NULL,1),(10,'test','098f6bcd4621d373cade4e832627b4f6',NULL,0,0,0,NULL,8,0,0,'2014-03-04 10:44:38',1),(11,'qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq','c341c584fbe3fe5775b568be53d0c315',NULL,0,0,0,NULL,8,0,0,NULL,1),(12,'zz12@11.com','3fde6bb0541387e4ebdadf7c2ff31123','zzh123@126.com',0,0,0,NULL,8,0,0,'2014-03-10 10:25:54',1);
 /*!40000 ALTER TABLE `kinuser` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -167,4 +168,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-03-10  1:20:58
+-- Dump completed on 2014-03-13  1:49:02

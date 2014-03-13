@@ -373,6 +373,7 @@ class Setting(BaseHandler):
 		kindle_email = web.input().get('kindle_email').strip()
 		timezone = int(web.input().get('timezone'))
 		send_time = (web.input().get('send_time'))
+		ifmobi = int(web.input().get('book_type'))
 		enable_send = int(bool(web.input().get('enable_send')))
 		keep_image = int(bool(web.input().get("keepimage")))
 		send_days = web.input(optionday=[]).get('optionday')
@@ -390,7 +391,7 @@ class Setting(BaseHandler):
 
 		#用户信息设置
 		#put_user_messgaes(k_id,kindle_email,send_time=1,enable_send=0,keep_image=0,timezone=8,days=[0])
-		result = model.put_user_messgaes(user.k_id,kindle_email,send_time,enable_send,keep_image,timezone,send_days)
+		result = model.put_user_messgaes(user.k_id,user.name,kindle_email,send_time,enable_send,keep_image,timezone,send_days,ifmobi)
 
 		'''
 		print kindle_email
@@ -504,7 +505,7 @@ class Deliver(BaseHandler):
 				'''
 				user = model.getuser(username)[0]
 				if user and user.kindle_email:
-					jobq.enqueue(pushwork3,args=(user.kindle_email,ownfeeds,user.keep_image))
+					jobq.enqueue(pushwork3,args=(user.kindle_email,ownfeeds,user.keep_image,user.ifmobi))
 			return jjenv.get_template("autoback.html").render(nickname=session.username,title='Delivering',tips='admin已投递！')
 		else:
 			user = model.getuser(username)[0]

@@ -58,7 +58,7 @@ def ifhasuser(name,kindle_email):
 def userid2feeds(user_id):
 	try:
 		myvar = dict(k_id=user_id)
-		result = db.select('feeds_user',myvar,where='k_id = $k_id')
+		result = db.select('feeds_user',myvar,where='k_id = $k_id',limit=7)
 		feeds = []
 		for n in result:
 			feeds.append(n.f_id)
@@ -187,7 +187,7 @@ def put_unsubscribe(k_id,id):
 		return 0
 
 #用户信息更新
-def put_user_messgaes(k_id,kindle_email,send_time=1,enable_send=0,keep_image=0,timezone=8,days=[0]):
+def put_user_messgaes(k_id,name,kindle_email,send_time=1,enable_send=0,keep_image=0,timezone=8,days=[0],ifmobi=1):
 	#db.update('user', where='id=$id', vars={'id':100}, name='Michael', age=29)
 	try:
 		myvar = dict(k_id=k_id)
@@ -199,7 +199,8 @@ def put_user_messgaes(k_id,kindle_email,send_time=1,enable_send=0,keep_image=0,t
 		else:
 			bin_re = int(bin(0)[2:])
 
-		db.update('kinuser',where='k_id=$k_id',vars=myvar,kindle_email=kindle_email,send_time=send_time,enable_send=enable_send,keep_image=keep_image,timezone=timezone,send_days=bin_re,_test=False)
+		db.update('kinuser',where='k_id=$k_id',vars=myvar,kindle_email=kindle_email,send_time=send_time,enable_send=enable_send,keep_image=keep_image,timezone=timezone,send_days=bin_re,ifmobi=ifmobi,_test=False)
+		memc.delete(hash('kinuser%s' % name))
 		return 1
 	except:
 		return 0

@@ -62,5 +62,5 @@ else:
 				q.enqueue(pushwork,args=(user.kindle_email,feeds,mfeeds,user.keep_image),timeout=feeds_num*300)
 			'''
 			if user and user.kindle_email:
-				q.enqueue(pushwork3,args=(user.kindle_email,ownfeeds,user.keep_image))
+				q.enqueue(pushwork3,args=(user.kindle_email,ownfeeds,user.keep_image,user.ifmobi))
 		print '-=end=-'

@@ -11,7 +11,6 @@ from books.ZhihuDaily import ZhihuDaily
 from books.DoubanBook import DoubanBook
 from books.PaoPao import PaoPao
 from books.Economist import Economist
-from books.AnBang import AnBang
 from books.Qiushibaike import Qiushibaike
 from books.Lianhezaobao import Lianhezaobao
 
@@ -45,11 +44,10 @@ zzh2 = ZhihuDaily(log)
 zzh3= DoubanBook(log)
 zzh4 = PaoPao(log)
 zzh6 = Economist(log)
-zzh7 = AnBang(log)
 zzh8 = Qiushibaike(log)
 zzh9 = Lianhezaobao(log)
 
-zzh.feeds = feeds5
+zzh.feeds = feeds4
 zzh.keep_image = False
 zzh2.keep_image = False
 zzh3.keep_image = True
@@ -60,7 +58,7 @@ zzh8.keep_image = False
 #print zzh9.ParseFeedUrls()
 
 zzhs = []
-zzhs.append(zzh9)
+zzhs.append(zzh)
 #总的img计数
 imgindex_temp = 0
 

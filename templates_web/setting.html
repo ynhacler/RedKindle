@@ -70,8 +70,8 @@
         <p>
             <label>投递格式<em class="required">*</em></label>
             <select class="bool" name="book_type">
-                <option value="mobi" selected="selected">mobi</option>
-                <option value="epub" >epub-还未开放</option>
+                <option value="1" {% if user.ifmobi|int==1 %}selected="selected"{% endif %}>mobi</option>
+                <option value="0" {% if user.ifmobi|int==0 %}selected="selected"{% endif %}>epub</option>
             </select>
         </p>
         

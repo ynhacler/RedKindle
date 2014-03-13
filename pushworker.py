@@ -46,6 +46,22 @@ def mobi(input_file, exec_path,logging=None):
 		logging.error("Error: %s" % e)
 		return ''
 
+#epub
+def epub(r_path,t_path,e_path, logging=None):
+	try:
+		os.chdir(path.join(r_path,t_path,e_path))
+
+		logging.info("generate .epub file start... ")
+		system("zip -X -9 -r book1.epub.zip * -x mimetype")
+		system("zip -X -0 book1.epub.zip mimetype")
+		system("mv book1.epub.zip daily.epub")
+
+		os.chdir(r_path)
+		return 'daily.epub'
+	except Exception, e:
+		logging.error("Error: %s" % e)
+		return ''
+
 #发邮件
 def send_mail(from_addr,to_addr,attach_path,logging=None):
 	try:
@@ -263,7 +279,7 @@ def pushwork(email,feeds,mfeeds,ifimg):
 
 
 #从mysql中提取数据
-def pushwork3(email,feeds,ifimg):#feeds只存有编号
+def pushwork3(email,feeds,ifimg,ifmobi):#feeds只存有编号,ifmobi=1
 	#相关信息
 	log = logging.getLogger()
 	sum_pic_size = 0#getsize('test.png')/1024 MAX_PIC_SIZE
@@ -276,7 +292,10 @@ def pushwork3(email,feeds,ifimg):#feeds只存有编号
 	temp_sec = ''
 
 	ROOT = path.dirname(path.abspath(__file__))
-	output_dir = path.join(ROOT, 'temp','mobi')
+	if ifmobi == 1:
+		output_dir = path.join(ROOT, 'temp','mobi')
+	else:
+		output_dir = path.join(ROOT, 'temp','epub','OEBPS')
 
 	templates_env = Environment(loader=PackageLoader('bmaintest', 'templates2'))
 
@@ -346,7 +365,7 @@ def pushwork3(email,feeds,ifimg):#feeds只存有编号
 	## TOC (HTML)
 	render_and_write('toc.html', wrap, 'toc.html', output_dir,templates_env)
 	## OPF
-	render_and_write('opf.xml', wrap, 'daily.opf', output_dir,templates_env)
+	render_and_write('opf.xml', wrap, 'metadata.opf', output_dir,templates_env)
 	#/home/zzh/Desktop/temp/v3
 	for feed in data:
 		for entry in feed['entries']:
@@ -358,12 +377,20 @@ def pushwork3(email,feeds,ifimg):#feeds只存有编号
 
 
 	#gen mobi
-	mobi_file = mobi(path.join(output_dir,'daily.opf'),path.join(ROOT,'kindlegen_1.1') ,log)
+	if ifmobi == 1:
+		mobi_file = mobi(path.join(output_dir,'metadata.opf'),path.join(ROOT,'kindlegen_1.1') ,log)
 
+		if mobi_file :
+			mobi_file = path.join(output_dir,mobi_file)
+			send_mail(SrcEmail,email,mobi_file,log)
+	else:
+		epub_file = epub(ROOT,'temp','epub',log)
 
-	if mobi_file :
-		mobi_file = path.join(output_dir,mobi_file)
-		send_mail(SrcEmail,email,mobi_file,log)
+		if epub_file:
+			epub_file = path.join(ROOT,'temp','epub',epub_file)
+			send_mail(SrcEmail,email,epub_file,log)
+			if path.isfile( epub_file):
+				os.remove(epub_file)
 
 	#clean
 	for fn in listdir(output_dir):
@@ -374,4 +401,4 @@ def pushwork3(email,feeds,ifimg):#feeds只存有编号
 	return '-=end=-'
 
 if __name__=="__main__":
-	pushwork3('aaaa',[16],0)
+	pushwork3('aaaa',[16],0,1)
