@@ -16,7 +16,6 @@
 			<text>目录</text>
 		</navLabel>
         	<content src="toc.html"/>
-    	</navPoint>
 
 	    	{% for feed in feeds %}
 	    	<navPoint class="section" id="chapter_{{feed.number}}" playOrder="{{feed.play_order}}">
@@ -34,6 +33,7 @@
 	    	</navPoint>
 	    	{% endfor %}
 
+    	</navPoint>
 
     </navMap>
 </ncx>

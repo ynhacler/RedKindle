@@ -513,7 +513,7 @@ class Deliver(BaseHandler):
 				ROOT = path.dirname(path.abspath(__file__))
 				output_dir = path.join(ROOT, 'templates2')
 				mobi_file = path.join(output_dir,'WelcomeRedKindle.mobi')
-				jobq.enqueue(send_mail,SrcEmail,user.kindle_email,mobi_file)
+				jobq.enqueue(send_mail,args=(SrcEmail,user.kindle_email,mobi_file,1))
 			return jjenv.get_template("autoback.html").render(nickname=session.username,title='Delivering',tips='已投递！')
 
 #=====================================================

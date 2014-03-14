@@ -31,7 +31,7 @@ TIMEZONE = 8  #默认时区
 SrcEmail = "redkindle@zhred.net"
 
 #邮件附件标题
-ATTACH_FILENAME= 'redkindle_feed.mobi'
+ATTACH_FILENAME= 'redkindle_feed'
 
 #图片和的最大值
 MAX_PIC_SIZE = 10*1024#10M

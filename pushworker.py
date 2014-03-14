@@ -41,7 +41,7 @@ def mobi(input_file, exec_path,logging=None):
 	try:
 		logging.info("generate .mobi file start... ")
 		system("%s %s" % (exec_path, input_file))
-		return 'daily.mobi'
+		return 'metadata.mobi'
 	except Exception, e:
 		logging.error("Error: %s" % e)
 		return ''
@@ -63,7 +63,7 @@ def epub(r_path,t_path,e_path, logging=None):
 		return ''
 
 #发邮件
-def send_mail(from_addr,to_addr,attach_path,logging=None):
+def send_mail(from_addr,to_addr,attach_path,ifmobi,logging=None):
 	try:
 		msg = MIMEMultipart()
 		msg['From'] = from_addr
@@ -78,7 +78,11 @@ def send_mail(from_addr,to_addr,attach_path,logging=None):
 		with open(attach_path, 'rb') as fp:
 			part.set_payload(fp.read())
 		encoders.encode_base64(part)
-		part.add_header('Content-Disposition', 'attachment', filename=ATTACH_FILENAME)
+		if ifmobi == 1:
+			filename=ATTACH_FILENAME+".mobi"
+		else:
+			filename=ATTACH_FILENAME+".epub"
+		part.add_header('Content-Disposition', 'attachment', filename=filename)
 		msg.attach(part)
 		smtp = smtplib.SMTP('127.0.0.1', 25)
 		smtp.sendmail(from_addr, to_addr, msg.as_string())
@@ -382,13 +386,13 @@ def pushwork3(email,feeds,ifimg,ifmobi):#feeds只存有编号,ifmobi=1
 
 		if mobi_file :
 			mobi_file = path.join(output_dir,mobi_file)
-			send_mail(SrcEmail,email,mobi_file,log)
+			send_mail(SrcEmail,email,mobi_file,1,log)
 	else:
 		epub_file = epub(ROOT,'temp','epub',log)
 
 		if epub_file:
 			epub_file = path.join(ROOT,'temp','epub',epub_file)
-			send_mail(SrcEmail,email,epub_file,log)
+			send_mail(SrcEmail,email,epub_file,0,log)
 			if path.isfile( epub_file):
 				os.remove(epub_file)
 

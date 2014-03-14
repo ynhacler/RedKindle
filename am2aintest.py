@@ -13,6 +13,7 @@ from books.PaoPao import PaoPao
 from books.Economist import Economist
 from books.Qiushibaike import Qiushibaike
 from books.Lianhezaobao import Lianhezaobao
+from books.Lianhe_china import Lianhe_china
 
 
 def render_and_write(template_name, context, output_name, output_dir):
@@ -46,19 +47,20 @@ zzh4 = PaoPao(log)
 zzh6 = Economist(log)
 zzh8 = Qiushibaike(log)
 zzh9 = Lianhezaobao(log)
+zzh10 = Lianhe_china(log)
 
 zzh.feeds = feeds4
 zzh.keep_image = False
 zzh2.keep_image = False
 zzh3.keep_image = True
-zzh8.keep_image = False
+zzh10.keep_image = False
 #zzh.fulltext_by_readability = False
 #zzh.fulltext_by_instapaper = False
 
 #print zzh9.ParseFeedUrls()
 
 zzhs = []
-zzhs.append(zzh)
+zzhs.append(zzh10)
 #总的img计数
 imgindex_temp = 0
 

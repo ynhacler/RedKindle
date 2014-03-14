@@ -8,9 +8,14 @@
 {% endblock %}
 
 {% block content %}
+
+<style>a.forget{TEXT-DECORATION:none}a.forget:hover{TEXT-DECORATION:underline}</style>
+
     {% if tips %}
     <p style="color:red;font-size:0.8em;">{{tips}}</p>
     {% endif %}
+
+
     <form action="/login" method="POST">
     <table id="login" align='center'>
         <tr>
@@ -29,8 +34,11 @@
             <td></td>
             <td><input type="submit" value="登录" onclick="javascript:return check();window.close();" target="_parent" /></td>
         </tr>
+	<tr>
+	<td></td>
+    	<td><a class="forget" href='/forget_passwd' style="align:center;text-align:center;">忘记密码</a></td>
+	</tr>
     </table>
     </form>
-    <a href='/forget_passwd' style="align:center;">忘记密码</a>
     <pre><p> </p></pre>
 {% endblock %}

@@ -36,7 +36,7 @@ def getuser(name):
 		if not result:
 			myvar = dict(name=name)
 			result = list(db.select('kinuser',myvar,where='name = $name'))
-			memc.add(hash('kinuser%s' % name),result,time=60*5)
+			memc.add(hash('kinuser%s' % name),result,time=60*4)
 		return result
 	except:
 		return None
@@ -58,7 +58,7 @@ def ifhasuser(name,kindle_email):
 def userid2feeds(user_id):
 	try:
 		myvar = dict(k_id=user_id)
-		result = db.select('feeds_user',myvar,where='k_id = $k_id',limit=7)
+		result = db.select('feeds_user',myvar,where='k_id = $k_id',limit=10)
 		feeds = []
 		for n in result:
 			feeds.append(n.f_id)
@@ -70,8 +70,11 @@ def userid2feeds(user_id):
 #得到用户的feeds根据name
 def username2feeds(username):
 	try:
+		'''
 		myvar=dict(name=username)
 		result = db.select('kinuser',myvar,where='name=$name')
+		'''
+		result = getuser(username)
 		k_id = result[0].k_id
 		return userid2feeds(k_id)
 	except:

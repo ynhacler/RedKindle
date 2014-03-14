@@ -18,8 +18,14 @@
         <h1><a href="/">RedKindle</a></h1>
         {% if nickname %}
           <a class="nav" href="/logout">退出</a>
+	  <span style="color: #ccc;">&bull;</span>
+	  <span><a target="_blank" href="/help">帮助</a></span>
           <span style="color: #ccc;">&bull;</span>
         <span>Hello, <a href="#"><strong>{{nickname}}</strong></a></span>
+	{% else %}
+		<span><a target="_blank" href="/help">帮助</a></span>
+		<span style="color: #ccc;">&bull;</span>
+		<span><a href="/login">登录</a></span>
         {% endif %}
         <div class="clear"></div>
         {% endblock %}
