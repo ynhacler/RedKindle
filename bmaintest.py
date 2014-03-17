@@ -9,7 +9,11 @@ import os, datetime, logging, __builtin__, hashlib, time
 from collections import OrderedDict, defaultdict
 import gettext
 import memcache
+import json
+import random
+from pyoauth2 import Client
 
+from lib.url_req import URLOpener
 from os import path
 
 
@@ -464,6 +468,124 @@ class Test(BaseHandler):
 			s += "<pre><p>" + str(d).rjust(28) + " | " + str(os.environ[d]) + "</p></pre>"
 		return s
 
+class QQ_login():
+	def GET(self):
+		code = web.input().get('code')
+		client = Client(KEY_Q, SECRET_Q,
+				site='https://graph.qq.com',
+				authorize_url='https://graph.qq.com/oauth2.0/authorize',
+				token_url='https://graph.qq.com/oauth2.0/token')
+
+		if not code:
+			try:
+				authorize_url = client.auth_code.authorize_url(redirect_uri=CALLBACK_Q,scope='get_user_info')
+				web.seeother(authorize_url)
+			except:
+				raise web.seeother(r'/')
+		else:
+			try:
+				access_token = client.auth_code.get_token(code, redirect_uri=CALLBACK_Q, parse='query')
+				url = "https://graph.qq.com/oauth2.0/me?access_token=%s" % access_token.token;
+				opener = URLOpener()
+				result = opener.open(url)
+				r_code, content = result.code, result.content
+			except:
+				raise web.seeother(r'/')
+			if content.find('error') == 0:
+				raise web.seeother(r'/')
+
+			if content.find("callback") == 0:
+				lp = content.find('(')
+				rp = content.find(')')
+				con = content[lp+1:rp-1]
+
+				try:
+					data = json.loads(con)
+
+					openid = data['openid']
+					clientid = data['client_id']
+
+					url2 = "https://graph.qq.com/user/get_user_info?oauth_consumer_key=%s&access_token=%s&openid=%s&format=json" % (KEY_Q,access_token.token,openid)
+
+					r2 = opener.open(url2)
+					content2 =  r2.content
+					data2 = json.loads(content2)
+					ret = data2['ret']
+				except:
+					raise web.seeother(r'/')
+				if ret == 0:
+					name = data2['nickname']+'('+openid[2:6]+')'
+					#存在，登录
+					if model.isuser(name,'qq') == 1:
+						session.login = 1
+						session.username = name
+						model.update_logintime(local_time(),name)
+						raise web.seeother(r'/')
+					else:
+						#不存在，注册,登录返回
+						#注册
+						model.input_user(name,'qq')
+						if model.isuser(name,'qq') == 1:
+							session.login = 1
+							session.username = name
+							raise web.seeother(r'/')
+						else:
+							return jjenv.get_template("register.html").render(nickname='',title='Register',tips="")
+				else:
+					raise web.seeother(r'/')
+			else:
+				raise web.seeother(r'/')
+
+class Douban_login():
+	def GET(self):
+		code = web.input().get('code')
+		client = Client(KEY, SECRET,
+				site='https://api.douban.com',
+				authorize_url='https://www.douban.com/service/auth2/auth',
+				token_url='https://www.douban.com/service/auth2/token')
+
+		#拒绝
+		error = web.input().get('error')
+		if error == 'access_denied':
+			raise web.seeother(r'/')
+
+		if not code:
+			try:
+				authorize_url = client.auth_code.authorize_url(redirect_uri=CALLBACK, scope='shuo_basic_w,douban_basic_common')
+				web.seeother(authorize_url)
+			except:
+				raise web.seeother(r'/')
+		else:
+			try:
+				#get code
+				access_token = client.auth_code.get_token(code, redirect_uri=CALLBACK)
+				print 'get @me info'
+				ret = access_token.get('/v2/user/~me')
+				#检查有否已经存在
+				name = ret.parsed['name']+'('+ret.parsed['id']+')'
+			except:
+				raise web.seeother(r'/')
+			#存在，登录
+			if model.isuser(name,'douban') == 1:
+				session.login = 1
+				session.username = name
+				#Login_time
+				model.update_logintime(local_time(),name)
+				raise web.seeother(r'/')
+			else:
+				#不存在，注册,登录返回
+				#注册
+				model.input_user(name,'douban')
+
+				if model.isuser(name,'douban') == 1:
+					session.login = 1
+					session.username = name
+					raise web.seeother(r'/')
+				else:
+					return jjenv.get_template("register.html").render(nickname='',title='Register',tips="")
+
+
+
 
 #推送
 class Deliver(BaseHandler):
@@ -536,6 +658,8 @@ urls = (
 	"/mysub","MyExistSub",
 	"/forget_passwd","ForgetPW",
 	"/reset_password","ResetPW",
+	"/db_login/?","Douban_login",
+	"/qq_login/?","QQ_login",
 )
 
 app = web.application(urls,globals())

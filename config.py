@@ -35,3 +35,14 @@ ATTACH_FILENAME= 'redkindle_feed'
 
 #图片和的最大值
 MAX_PIC_SIZE = 10*1024#10M
+
+
+#Douban_login
+KEY = ''
+SECRET = ''
+CALLBACK = 'http://****/db_login/'
+
+#!!_login
+KEY_Q = ''
+SECRET_Q = ''
+CALLBACK_Q = 'http://****/qq_login/'
