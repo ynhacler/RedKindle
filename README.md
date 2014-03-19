@@ -48,6 +48,7 @@ pip install python-memcached<br/>
 apt-get install memcached<br/>
 pip install requests<br/>
 pip install redis<br/>
+pip install douban-client<br/>
 pip install rq(简单的python任务队列，http://python-rq.org/)<br/>
 apt-get install libjpeg8-dev<br/>
 apt-get install libpng12-dev<br/>
@@ -86,6 +87,8 @@ http://blog.sina.com.cn/s/blog_62d12d690101dase.html 有简单配置。<br/>
 安装postfix(系统自带exim4，不好用直接删了)，就可以使用。详细使用google。<br/>
 不想安装，进入pushworker.py，在send_mail函数里进行设置。<br/>
 
+七、QQ、豆瓣登录设置：<br/>
+在config.py里输入Api Key等相关信息<br/>
 
 七、使用：<br/>
 1. command & ： 后台运行，你关掉终端会停止运行<br/>

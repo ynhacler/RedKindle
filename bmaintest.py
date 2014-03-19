@@ -514,7 +514,8 @@ class QQ_login():
 				except:
 					raise web.seeother(r'/')
 				if ret == 0:
-					name = data2['nickname']+'('+openid[2:6]+')'
+					#name = data2['nickname']+'('+openid[2:6]+')'
+					name = openid[2:6]
 					#存在，登录
 					if model.isuser(name,'qq') == 1:
 						session.login = 1
@@ -562,7 +563,8 @@ class Douban_login():
 				print 'get @me info'
 				ret = access_token.get('/v2/user/~me')
 				#检查有否已经存在
-				name = ret.parsed['name']+'('+ret.parsed['id']+')'
+				#name = ret.parsed['name']+'('+ret.parsed['id']+')'
+				name = ret.parsed['id']
 			except:
 				raise web.seeother(r'/')
 			#存在，登录
