@@ -1,55 +1,50 @@
 {% extends "base.html" %}
 
-{% block css %}
-<style type="text/css">
-.usrtb {
-background-color:#f0f0f0;
-border:1px dotted black;
-width:100%;
-border-collapse:collapse;
-}
-.usrtbhead {
-background-color:grey;
-color:white;
-}
-.usrrow .usrh {
-border:1px dotted grey;
-}
-</style>
+{% block menubar %}
 {% endblock %}
 
+
+
 {% block content %}
+	
+<div class="panel panel-default">
 <form id="chpwd" action="/admin" method="POST">
-<fieldset id="fieldset_chpwd" >
-    <legend>修改密码</legend>
-    {% if chpwdtips %}
+            <div class="panel-heading">
+              <h3 class="panel-title">修改密码</h3>
+            </div>
+            <div class="panel-body">
+{% if chpwdtips %}
     <p style="color:red;font-size:0.8em;">{{chpwdtips}}</p>
-    {% endif %}
+ {% endif %}
     <table id="tb_chpwd" align='center'>
     <tr>
         <td style="text-align:right;">原密码：</td>
-        <td><input type="password" name="op" id="orgpwd"></td>
+        <td><input class="form-control" type="password" name="op" id="orgpwd"></td>
     </tr>
     <tr>
         <td style="text-align:right;">新密码：</td>
-        <td><input type="password" name="p1" id="newpwd1"></td>
+        <td><input class="form-control" type="password" name="p1" id="newpwd1"></td>
     </tr>
     <tr>
         <td style="text-align:right;">再次输入新密码：</td>
-        <td><input type="password" name="p2" id="newpwd2"></td>
+        <td><input class="form-control" type="password" name="p2" id="newpwd2"></td>
     </tr>
     <tr>
         <td></td>
-        <td><input type="submit" value="提交"></td>
+        <td><input type="submit" class="btn" value="提交"></td>
     </tr>
     </table>
-</fieldset>
-</form>
+    </form>
+            </div>
+          </div>
 
 {% if user.level == 3 %}
-<fieldset id="fieldset_cm">
-    <legend>用户账号列表</legend>
-    <table id="tb_cm" class="usrtb">
+		  <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">用户账号列表</h3>
+            </div>
+            <div class="panel-body">
+              <table id="tb_cm" class="table table-bordered">
         <tr class="usrtbhead">
         <th class="usrh">序号</th><th class="usrh">用户名</th>
         <th class="usrh">使能发送</th>
@@ -57,22 +52,23 @@ border:1px dotted grey;
         <th class="usrh">上次登录</th>
 	<th class="usrh">-</th>
         </tr>
-        {% for u in users %}
+      {% for u in users %}
         <tr class="usrrow">
         <th class="usrh">{{loop.index}}</th><th class="usrh">{{u.name}}</th>
         <th class="usrh">{{u.enable_send}}</th>
-	<th class="usrh">{{u.kindle_email}}</th>
+        <th class="usrh">{{u.kindle_email}}</th>
         <th class="usrh">{{u.login_time}}</th>
         <th class="usrh"><a href="delaccount?u={{u.name}}">删除账户</a></th>
         </tr>
-        {% endfor %}
-	<tr>
-	{% for page in range(1,pages+1) %}
-		<a href="/admin/page/{{page}}">{{page}}</a>
-	{% endfor %}
-	</tr>
-    </table>
-</fieldset>
+        {% endfor %}  
+		</table>
+		<div class="btn-toolbar" role="toolbar">
+{% for page in range(1,pages+1) %}
+  <div class="btn-group"><a href="/admin/page/{{page}}">{{page}}</a></div>
+{% endfor %}
+</div>
+            </div>
+          </div>
 {% endif %}
 
 {% endblock %}

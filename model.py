@@ -209,10 +209,11 @@ def put_user_messgaes(k_id,name,kindle_email,send_time=1,enable_send=0,keep_imag
 		return 0
 
 #改密码
-def update_user_passwd(k_id,passwd):
+def update_user_passwd(k_id,passwd,name):
 	try:
 		myvar = dict(k_id=k_id)
 		db.update('kinuser',where='k_id=$k_id',vars=myvar,passwd = passwd)
+		memc.delete(hash('kinuser%s' % name))
 		return 1
 	except:
 		return 0

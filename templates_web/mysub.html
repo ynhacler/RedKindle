@@ -1,84 +1,95 @@
 {% extends "base.html" %}
 
-{% block content %}
-<p><strong style="color:red;">最多可订阅10个。</strong></p>
 
-<fieldset id="mybooks">
-    <legend>已订阅</legend>
-        {% set hasitem = [] %}
-	{% for book in books %}
-      		{% if book.f_id in ownfeeds %}
-  		 <div class="book" id="tableViewCell{{book.f_id}}">
-        		 <div class="titleRow">{{book.title}}</div>
-	       		 <div class="cornerControls">
-	             	 <a href="/unsubscribe/{{book.f_id}}" class="actionButton unsubscribeLink">退订</a>
-	      		 </div>
-		         <div class="summaryRow">{{book.description}}</div>
- 		 </div>
-       		 {% do hasitem.append(1) %}
-		{% endif %}
-        {% endfor %}
-        {% if not hasitem %}
-		<p style="font-size:0.8em;color:grey;">暂时没有已订阅的书籍</p>
-	{% endif %}
-</fieldset>
-
+{% block js %}
 <script src="http://dn-dogear.qbox.me/static/jquery-1.5.2.min.js?v=1.0"></script>
+
 <script type="text/javascript" charset="utf-8">
 $(document).ready(function(){
 
 $('.unsubscribeLink').click(function(){
-	if (confirm('确定要退订？'))
-	ajax_request(this, '退订失败');
-	return false;
+        if (confirm('确定要退订？'))
+        ajax_request(this, '退订失败');
+        return false;
 });
 
 });
 
 function ajax_progress(id)
 {
-	var oldRow = document.getElementById('tableViewCell' + id);
-	var progressDiv = document.createElement('div');
-	progressDiv.setAttribute('id', 'tableViewCell' + id);
-	progressDiv.setAttribute('class', 'tableViewCell tableViewCellAjaxReplacement');
-	progressDiv.setAttribute('style', 'height: ' + oldRow.clientHeight + 'px;');
-	var spinner = document.createElement('img');
-	spinner.setAttribute('class', 'ajaxActivityButton');
-	spinner.setAttribute('src', 'http://dn-dogear.qbox.me/static/loader-gray-big.gif?v=1.0');
-	spinner.setAttribute('style', 'margin-top: ' + (Math.round(oldRow.clientHeight / 2) - 16) + 'px;');
-	progressDiv.appendChild(spinner);
-	oldRow.parentNode.replaceChild(progressDiv, oldRow);
+        var oldRow = document.getElementById('tableViewCell' + id);
+        var progressDiv = document.createElement('div');
+        progressDiv.setAttribute('id', 'tableViewCell' + id);
+        progressDiv.setAttribute('class', 'tableViewCell tableViewCellAjaxReplacement');
+        progressDiv.setAttribute('style', 'height: ' + oldRow.clientHeight + 'px;');
+        var spinner = document.createElement('img');
+        spinner.setAttribute('class', 'ajaxActivityButton');
+        spinner.setAttribute('src', 'http://dn-dogear.qbox.me/static/loader-gray-big.gif?v=1.0');
+        spinner.setAttribute('style', 'margin-top: ' + (Math.round(oldRow.clientHeight / 2) - 16) + 'px;');
+        progressDiv.appendChild(spinner);
+        oldRow.parentNode.replaceChild(progressDiv, oldRow);
 }
 function ajax_request(t, m, d, callback)
 {
-	var href = $(t).attr('href');
-	//unsubscribe/1
-	var url_parsed = /^\/unsubscribe\/([0-9]+)$/.exec(href);
-	var id = url_parsed[1];
-	if(!id) return false;
-	if (href == '' || href =='#')
-		return false
-	$(t).attr('href', '###');
-	if (d != true)
-		ajax_progress(id);
-	$.post(href, { 'ajax': 1 },
-			function(data){
-			if(data == 'ok') {
-				if (callback)
-					callback(t)
-				else if (d != true)
-					$('#tableViewCell' + id).hide();
-				$('.tableViewCell:last-child').addClass('tableViewCellLast');
-			} else {
-				alert(m);
-			}
-			return false;
-			}
-	      );
-	return false;
+        var href = $(t).attr('href');
+        //unsubscribe/1
+        var url_parsed = /^\/unsubscribe\/([0-9]+)$/.exec(href);
+        var id = url_parsed[1];
+        if(!id) return false;
+        if (href == '' || href =='#')
+                return false
+        $(t).attr('href', '###');
+        if (d != true)
+                ajax_progress(id);
+        $.post(href, { 'ajax': 1 },
+                        function(data){
+                        if(data == 'ok') {
+                                if (callback)
+                                        callback(t)
+                                else if (d != true)
+                                        $('#tableViewCell' + id).hide();
+                                $('.tableViewCell:last-child').addClass('tableViewCellLast');
+                        } else {
+                                alert(m);
+                        }
+                        return false;
+                        }
+              );
+        return false;
 }
 </script>
+
+{% endblock %}
+
+{% block content %}
+
+<br/>
+<p><strong style="color:red;">最多可订阅10个。</strong></p>
+
+
+        {% set hasitem = [] %}
+	{% for book in books %}
+	{% if book.f_id in ownfeeds %}
+	<div class="panel panel-default" id="tableViewCell{{book.f_id}}">
+		<div class="panel-heading">
+		       <h3 class="panel-title">{{book.title}}</h3>
+		</div>
+		<div class="panel-body">
+         <p class="text-danger">{{book.descrip}}</p>
+
+          <p><a class="btn btn-primary actionButton unsubscribeLink" href="/unsubscribe/{{book.f_id}}" role="button">退订</a></p>
+	</div>
+	</div>
+	{% do hasitem.append(1) %}
+        {% endif %}
+	{% endfor %}
+	 {% if not hasitem %}
+	 <p style="font-size:0.8em;color:grey;">暂时没有已订阅的书籍</p>
+	 {% endif %}
+
+
 
 
 
 {% endblock %}
+

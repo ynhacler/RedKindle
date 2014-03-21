@@ -3,33 +3,22 @@
 {% block bodytag %}
 <body onload="document.getElementById('username').focus();">
 {% endblock %}
-
+ 
 {% block menubar %}
 {% endblock %}
-
+ 
 {% block content %}
-    {% if tips %}
-    	<p style="color:red;font-size:0.8em;">{{tips}}</p>
-	 <a href="/login">登录</a>
-    {% endif %}
-    <h2 style="margin-bottom: 0;text-align:center;">密码重置</h2>
-    <form action="/forget_passwd" method="POST">
-    <table id="login" align='center'>
-	<tr>
-		<td>电子邮箱：</td>
-		<td><input type="text" name="u" id="username" /></td>
-	</tr>
-	<tr>
-		<td>kindle推送地址：</td>
-		<td><input type="text" name="k" id="kindle_email" /></td>
-	</tr>
-		 <td></td>
-		 <td><input type="submit" value="提交" onclick="javascript:return check();window.close();" target="_parent" /></td>
-	<tr>
-	</tr>
 
-    </table>
-    </form>
-    <pre><p> </p></pre>
+<div class="jumbotron">
+
+      <form class="form-signin" role="form" action="/forget_passwd" method="POST">
+        <h2 class="form-signin-heading">忘记密码</h2>
+{% if tips %}<p style="color:red;font-size:0.8em;" class="error">{{tips}}</p>{% endif %}
+        <input type="text" class="form-control" name="u" id="username" placeholder="Email address" required autofocus>
+        <input type="text" name="k" id="kindle_email" class="form-control" placeholder="kindle推送地址" required>
+        
+        <button class="btn btn-lg btn-primary btn-block" type="submit">提交</button>
+      </form>
+</div>
+
 {% endblock %}
-

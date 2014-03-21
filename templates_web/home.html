@@ -1,9 +1,15 @@
 {% extends "base.html" %}
 
+{% block menubar %}
+{% endblock %}
+
 {% block content %}
-    <p>RedKindle是一个将RSS订阅收集并制作成杂志发送至您的Kindle设备上的网站，让新闻时评社论笑料随你走。</p>
-    <p>
-    1、使用 <a href="https://github.com/ynhacler/Redkindle" rel="external">开源的RedKindle程序</a> <br /><br />
-    2、使用KindleGen生成Mobi的模块。支持Epub格式。
-    </p>
+<div class="jumbotron">
+        <h1>RedKindle</h1>
+	<p class="lead">是一个将RSS订阅收集并制作成杂志发送至您的Kindle设备上的网站，让新闻时评社论笑料随你走。</p>
+	<p class="lead">使用 <a href="https://github.com/ynhacler/Redkindle" rel="external">开源的程序</a>。</p>
+	<p><a class="btn btn-lg btn-success" href="/register" role="button">注册</a></p>
+</div>
+
+
 {% endblock %}

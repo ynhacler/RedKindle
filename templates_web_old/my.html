@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<p>
+添加RSS，可以到<a href='http://www.douban.com/group/topic/49499883/' target='_blank'>豆瓣</a>留言。
+</p>
+<p><strong style="color:red;">最多可订阅10个。</strong></p>
+
+{% if level == 3 %}
+<fieldset id="ownfeeds">
+    <legend>自定义RSS</legend>
+    <form action="" method="POST">
+    <div class="book">
+        <div class="titleRow">
+            <input type="text" name="t" placeholder="标题" />
+	    <label>是否全文:</label>
+	    <input type="checkbox" name="full"/>
+        </div>
+        <div class="cornerControls">
+            <input type="submit" value="添加" class="actionButton" />
+        </div>
+        <div class="summaryRow">
+            <input type="text" name="url" style="width:100%;"  placeholder="URL" />
+	    <textarea name='descrip' rows="3" cols="70" placeholder="简介"></textarea>
+	    
+	    <p>
+		<label>类型：</label>
+		<select class="bool" name="category">
+		{% for i in cate %}
+			<option value="{{ i.c_id }}">{{ i.category_name }}</option>
+		{% endfor %}
+		</select>
+	    </p>
+	    <p>
+	    	<label>更新周期：</label>
+		<input type="text" name="up_t" placeholder="几小时" />
+	    </p>
+        </div>
+        {% if tips %}<p style="color:red;font-size:0.7em;">{{tips}}</p>{% endif %}
+    </div>
+    </form>
+</fieldset>
+<p></p>
+{% endif %}
+
+<fieldset id="books">
+    <legend>未订阅</legend>
+    {% set hasitem2 = [] %}
+    {% for book in books %}
+    {% if book.f_id not in ownfeeds %}
+    <div class="book">
+        <div class="titleRow">{{book.title}}</div>
+        <div class="cornerControls">
+		{% if level == 3 %}
+			<a href="/delfeed/{{book.f_id}}" class="actionButton">删除</a>
+		{% endif %}
+           	<a href="/subscribe/{{book.f_id}}" class="actionButton subscribeLink">订阅</a>
+        </div>
+        <div class="summaryRow">{{book.descrip}}</div>
+    </div>
+    {% do hasitem2.append(1) %}
+    {% endif %}
+    {% endfor %}
+    {% if not hasitem2 %}
+    <p style="font-size:0.8em;color:grey;">暂时没有未订阅的书籍</p>
+    {% endif %}
+</fieldset>
+
+<script src="http://dn-dogear.qbox.me/static/jquery-1.5.2.min.js?v=1.0"></script>
+<script type="text/javascript" charset="utf-8">
+$(document).ready(function(){
+
+$('.subscribeLink').click(function(){
+	if ($(this).hasClass("restoreButton")) {return};
+
+	$(this).html("订阅中");
+	ajax_request(this, '订阅失败', true, function(t){
+		$(t).removeClass("subscribeLink").addClass("restoreButton").html("已订阅");
+		});
+
+	return false;
+	});
+});
+
+function ajax_request(t, m, d, callback)
+{
+	var href = $(t).attr('href');
+	var url_parsed = /^\/subscribe\/([0-9]+)$/.exec(href);
+	var id = url_parsed[1];
+	if(!id) return false;
+	if (href == '' || href =='#')
+		return false
+	$(t).attr('href', '###');
+	//href = 'http://zhred.net'+href
+	$.post(href, { 'ajax': 1 },
+			function(data){
+				if(data == 'ok') {
+					if (callback)
+						callback(t)
+					else if (d != true)
+						$('#tableViewCell' + id).hide();
+					//$('.tableViewCell:last-child').addClass('tableViewCellLast');
+				} else {
+					alert(m);
+				}
+				return false;
+			}
+	      );
+	return false;
+}
+</script>
+
+{% endblock %}

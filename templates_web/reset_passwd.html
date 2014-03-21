@@ -1,33 +1,26 @@
 {% extends "base.html" %}
-
+ 
 {% block bodytag %}
 <body onload="document.getElementById('username').focus();">
 {% endblock %}
-
+ 
 {% block menubar %}
 {% endblock %}
-
+ 
 {% block content %}
-    {% if tips %}
-         <p style="color:red;font-size:0.8em;">{{tips}}</p>
-	{% endif %}
-	<h2 style="margin-bottom: 0;text-align:center;">重置密码</h2>
-	<form action="/reset_password" method="POST">
-	<table id="login" align='center'>
-	<tr>
-		<td>新密码：</td>
-		<td><input type="password" name="p1" id="password" /></td>
-	</tr>
-	<tr>
-		<td>再次输入：</td>
-		<td><input type="password" name="p2" id="password" /></td>
-	</tr>
-	<tr>
-		<td><input type="hidden" value="{{nickname}}" name="u"/></td>
-		<td><input type="submit" value="提交" onclick="javascript:return check();window.close();" target="_parent" /></td>
-	</tr>
-	</table>
-	</form>
-	 <pre><p> </p></pre>
-{% endblock %}
 
+
+<div class="jumbotron">
+
+      <form class="form-signin" role="form" action="/reset_password" method="POST">
+        <h2 class="form-signin-heading">重置密码</h2>
+{% if tips %}<p style="color:red;font-size:0.8em;" class="error">{{tips}}</p>{% endif %}
+        <input type="password" class="form-control" name="p1" id="password" placeholder="Password" required autofocus>
+        <input type="password" class="form-control" name="p2" id="password" placeholder="Password Again" required>
+        <input type="hidden" value="{{nickname}}" name="u"/>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">提交</button>
+      </form>
+	  
+</div>
+
+{% endblock %}

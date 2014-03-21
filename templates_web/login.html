@@ -4,50 +4,24 @@
 <body onload="document.getElementById('username').focus();">
 {% endblock %}
 
-{% block menubar %}
-{% endblock %}
-
 {% block content %}
+<div class="jumbotron">
 
-<style>a.forget{TEXT-DECORATION:none}a.forget:hover{TEXT-DECORATION:underline}</style>
+      <form class="form-signin" role="form" action="/login" method="POST">
+        <h2 class="form-signin-heading">用户登录</h2>
+	{% if tips %}<p style="color:red;font-weight:bold;" class="error">{{tips}}</p>{% endif %}
+        <input type="text" class="form-control" name="u" id="username" placeholder="Email address" required autofocus>
+        <input type="password" class="form-control" name="p" id="password" placeholder="Password" required>
+        
+        <button class="btn btn-lg btn-primary btn-block" type="submit" onclick="javascript:return check();window.close();" target="_parent">登录</button>
+      </form>
+	  <a class="forget" href='/forget_passwd' style="align:center;text-align:center;">忘记密码</a><br/>
+      <br/>
+	  <label>
+	  一键登录：
+	  </label>
+	  <a href="/db_login/" target="_blank"><img src="static/login_with_douban_18.png" ></a>
+	<a href="/qq_login/" target="_blank"><img src="static/Connect_logo_2.png" ></a>
+</div>
 
-    {% if tips %}
-    <p style="color:red;font-size:0.8em;">{{tips}}</p>
-    {% endif %}
-
-    <form action="/login" method="POST">
-    <table id="login" align='center'>
-        <tr>
-            <td>电子邮箱: </td>
-            {% if username %}
-            <td><input type="text" name="u" id="username" value={{username}} /></td>
-            {% else %}
-            <td><input type="text" name="u" id="username" /></td>
-            {% endif %}
-        </tr>
-        <tr>
-            <td>密码: </td>
-            <td><input type="password" name="p" id="password" /></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><input type="submit" value="登录" onclick="javascript:return check();window.close();" target="_parent" /></td>
-        </tr>
-	<tr>
-	<td></td>
-    	<td><a class="forget" href='/forget_passwd' style="align:center;text-align:center;">忘记密码</a></td>
-	</tr>
-	<tr>
-	<td>
-	一键登录：
-	</td>
-	<td></td>
-	</tr>
-	<tr>
-	<td><a href="/qq_login/" target="_blank"><img src="/static/Connect_logo_2.png" ></a></td>
-	<td><a href="/db_login/" target="_blank"><img src="/static/login_with_douban_18.png" ></a></td>
-	</tr>
-    </table>
-    </form>
-    <pre><p> </p></pre>
 {% endblock %}

@@ -92,15 +92,15 @@ class Home(BaseHandler):
 
 class Help():
 	def GET(self):
-		return jjenv.get_template('help.html').render()
+		return jjenv.get_template('help.html').render(nickname=session.username,title="Help")
 
 #登录
 class Login(BaseHandler):
 	def GET(self):
-		tips = "请输入邮箱地址和密码。"
+		tips = ""
 
 		if session.login == 1:#是否登录
-			web.seeother(r'/')
+			web.seeother(r'/my')
 		else:
 			return jjenv.get_template("login.html").render(nickname='',title='Login',tips=tips)
 
@@ -122,7 +122,7 @@ class Login(BaseHandler):
 			session.username = name
 			#Login_time
 			model.update_logintime(local_time(),name)
-			raise web.seeother(r'/')
+			raise web.seeother(r'/my')
 		else:
 			tips = "帐号不存在或密码错误!"
 			session.login = 0
@@ -349,7 +349,7 @@ class Admin(BaseHandler):
 			else:
 				tips = "修改成功！"
 				passwd = hashlib.md5(p1).hexdigest()
-				model.update_user_passwd(user.k_id,passwd)
+				model.update_user_passwd(user.k_id,passwd,user.name)
 			return jjenv.get_template('admin.html').render(nickname=session.username,title="Admin",current='admin',user=user,users=users,chpwdtips=tips,pages = pages)
 		else:
 			return self.GET()

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if user and user.expires %}
+<div class="grey">
+    你的投递将于 <strong id="expires">{{ user.expires.strftime("%Y-%m-%d") }}</strong> 自动停止，请点击 
+    <a href="/renew?u={{user.name}}" class="actionButton">免费续期</a>
+    <a href="/delaccount?u={{user.name}}">删除此账户</a>
+</div>
+{% endif %}
+
+<p>
+<span style="color:red">注意</span>：必须首先激活您的Kindle，同时请到亚马逊账户中心 <a href="https://www.amazon.cn/gp/digital/fiona/manage" rel="external"  target="_blank">个人文档设置</a> 页面将<strong>redkindle@zhred.net</strong>加入 &quot;已认可的发件人电子邮箱列表(Your Kindle's approved email list)&quot;
+</p>
+
+<form id="set_frm" action="" method="post">
+    {% if method %}
+    {% if user and not user.kindle_email %}
+    <strong class="error">Kindle E-mail必须填写！</strong>
+    {% else %}
+    <strong class="success">恭喜，保存成功！</strong>
+    {% endif %}
+    {% endif %}
+    
+    <fieldset id="kindle_fieldset">
+        <legend>基本设置</legend>
+        <p>
+            <label>Kindle E-mail<em class="required">*</em></label><br />
+            <input type="text" name="kindle_email" style="width:240px" value="{% if user and user.kindle_email %}{{ user.kindle_email }}{% endif %}" />
+	    {% if not user.kindle_email %}<em style="color:red;font-size:80%">输入有误！</em>{% endif %}
+        </p>
+        <p>
+            <input type="checkbox" name="enable_send" {% if user and user.enable_send %}checked{% endif %} />
+            <label style="color:red">自动定时投递</label>
+        </p>
+        <p>
+            <label>所在时区<em class="required">*</em></label>
+            <select class="bool" name="timezone">
+                {% for i in range(-12, 0) %}
+                <option value="{{ i }}" {% if user.timezone|int==i %}selected="selected"{% endif %}>{{ "GMT%02.0f:00" % i }}</option>
+                {% endfor %}
+                <option value="0" {% if user.timezone|int==0 %}selected="selected"{% endif %}>GMT</option>
+                {% for i in range(1, 14) %}
+                <option value="{{ i }}" {% if user.timezone|int==i %}selected="selected"{% endif %}>{{ "GMT+%2.0f:00" % i }}</option>
+                {% endfor %}
+            </select>
+        </p>
+        <p>
+            <label>投递时间<em class="required">*</em></label>
+            <select class="bool" name="send_time">
+                {% for i in range(0, 24) %}
+                <option value="{{ i }}" {% if user.send_time|int == i %}selected="selected"{% endif %}>{{ "%02.0f:00" % i }}</option>
+                {% endfor %}
+            </select>
+	    <br/>
+	    |<input type="checkbox" name="optionday" value=0 {% if 0 in user.send_days %}checked='checked'{% endif %}>每天</input>|
+	    {% for d in range(1,8) %}
+	    	<input type="checkbox" name="optionday" value={{d}} {% if d in user.send_days %}checked='checked'{% endif %}>
+			{% if d == 7 %}
+				星期天
+			{% else %}
+				星期{{d}}
+			{% endif %}
+		</input>|
+	    {% endfor %}
+        </p>
+        <p>
+            <label>投递格式<em class="required">*</em></label>
+            <select class="bool" name="book_type">
+                <option value="1" {% if user.ifmobi|int==1 %}selected="selected"{% endif %}>mobi</option>
+                <option value="0" {% if user.ifmobi|int==0 %}selected="selected"{% endif %}>epub</option>
+            </select>
+	    <span class="error">只有多看系统支持epub</span>
+        </p>
+        
+        <p>
+            <a id="testlink" href="/deliver?u={{nickname}}">投递测试</a><strong id="testmsg" class="error"></strong> 注意：(旧的期刊，只用于测试投递是否成功。) 
+        </p>
+
+	{% if user.level == 3 %}
+	<p>
+        	<a id="testlink" href="/deliver?u={{nickname}}&p=1">Admin投递测试</a><strong id="testmsg" class="error"></strong>
+	</p>
+	{% endif %}
+
+	<p>
+		注意：投递需一段时间，更新内容越多所需时间越长
+	</P>
+    </fieldset>
+    <p></p>
+    <fieldset id="adv_fieldset">
+        <legend>自定义RSS设置</legend>
+        <p>
+            <input type="checkbox" name="keepimage" {% if user and user.keep_image %}checked="1"{% endif %} />
+            <label>保留文章图片（最大10M）</label>
+        </p>
+	<p>
+		多看用户注意：多看服务器可接受最大文件为20M，如果多次无法收到推送，请退订一些杂志或取消图片。
+	</p>
+    </fieldset>
+    <p class="save_btn">
+        <input type="submit" class="btn" value="保存设置" />
+    </p>
+</form>
+<p>
+注意：必须首先激活您的Kindle，同时请到亚马逊账户中心 <a href="https://www.amazon.cn/gp/digital/fiona/manage" rel="external">个人文档设置</a> 页面将 <strong>{{ mail_sender }}</strong> 加入 &quot;Your Kindle's approved email list&quot;
+</p>
+{% endblock %}
