@@ -303,7 +303,8 @@ class Deletefeed(BaseHandler):
 
 #管理页面
 class Admin(BaseHandler):
-	def GET(self,page=1):
+	def GET(self):
+		page = 1 if not web.input().get('page') else web.input().get('page')
 		user = self.getcurrentuser()
 		#fen ye
 		if user.level == 3:
@@ -653,7 +654,7 @@ urls = (
 	"/deliver", "Deliver",
 	"/register","Register",
 	"/admin","Admin",
-	"/admin/page/(\d+)","Admin",
+	"/admin/?","Admin",
 	"/delfeed/(.*)","Deletefeed",
 	"/feedback", "FeedBack",
 	"/test", "Test",
