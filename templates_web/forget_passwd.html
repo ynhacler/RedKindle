@@ -1,8 +1,5 @@
 {% extends "base.html" %}
 
-{% block bodytag %}
-<body onload="document.getElementById('username').focus();">
-{% endblock %}
  
 {% block menubar %}
 {% endblock %}
@@ -16,7 +13,7 @@
 {% if tips %}<p style="color:red;font-size:0.8em;" class="error">{{tips}}</p>{% endif %}
         <input type="text" class="form-control" name="u" id="username" placeholder="Email address" required autofocus>
         <input type="text" name="k" id="kindle_email" class="form-control" placeholder="kindle推送地址" required>
-        
+ 	<br/>       
         <button class="btn btn-lg btn-primary btn-block" type="submit">提交</button>
       </form>
 </div>

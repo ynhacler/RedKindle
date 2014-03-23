@@ -530,7 +530,7 @@ class QQ_login():
 						if model.isuser(name,'qq') == 1:
 							session.login = 1
 							session.username = name
-							raise web.seeother(r'/')
+							raise web.seeother(r'/my')
 						else:
 							return jjenv.get_template("register.html").render(nickname='',title='Register',tips="")
 				else:
@@ -583,7 +583,7 @@ class Douban_login():
 				if model.isuser(name,'douban') == 1:
 					session.login = 1
 					session.username = name
-					raise web.seeother(r'/')
+					raise web.seeother(r'/my')
 				else:
 					return jjenv.get_template("register.html").render(nickname='',title='Register',tips="")
 

@@ -3,6 +3,10 @@
 {% block menubar %}
 {% endblock %}
 
+{% block css %}
+<link href="/static/css/bootstrap-switch.min.css" rel="stylesheet">
+{% endblock %}
+
 
 {% block content %}
 
@@ -14,8 +18,8 @@
               <h3 class="panel-title">基本设置</h3>
             </div>
             <div class="panel-body">
-				<!--start====================-->
-				<form id="set_frm" action="" method="post">
+<!--start====================-->
+	<form id="set_frm" action="" method="post" class="form" role="form">
 {% if method %}
 {% if user and not user.kindle_email %}
 <strong class="error">Kindle E-mail必须填写！</strong>
@@ -26,16 +30,18 @@
 
     
 
-        <p>
+	<div class="form-group">
             <label>Kindle E-mail<em class="required">*</em></label><br />
-	    <input type="text" name="kindle_email" style="width:240px" value="{% if user and user.kindle_email %}{{ user.kindle_email }}    {% endif %}" />
+	    <input type="text" name="kindle_email" class="form-control" style="width:350px;" value="{% if user and user.kindle_email %}{{ user.kindle_email }}{% endif %}" />
 	    {% if not user.kindle_email %}<em style="color:red;font-size:80%">输入有误！</em>{% endif %}
-        </p>
-        <p>
-            <input type="checkbox" name="enable_send" {% if user and user.enable_send %}checked{% endif %} />
-            <label style="color:red">自动定时投递</label>
-        </p>
-        <p>
+        </div>
+
+	<div class="form-group">
+            <label style="color:red">定时投递</label>
+	    <input id="notification2" type="checkbox" name="enable_send" data-size="small" {% if user and user.enable_send %}checked{% endif %} />
+        </div>
+
+	<div class="form-group">
             <label>所在时区<em class="required">*</em></label>
             <select class="bool" name="timezone">
             	{% for i in range(-12, 0) %}
@@ -46,8 +52,9 @@
                 <option value="{{ i }}" {% if user.timezone|int==i %}selected="selected"{% endif %}>{{ "GMT+%2.0f:00" % i }}</option>
                 {% endfor %}    
             </select>
-        </p>
-        <p>
+        </div>
+
+	<div class="form-group">
             <label>投递时间<em class="required">*</em></label>
             <select class="bool" name="send_time">
 		{% for i in range(0, 24) %}
@@ -66,45 +73,57 @@
                 </input>|
             {% endfor %}
 	    
-        </p>
-        <p>
+        </div>
+
+        <div class="form-group">
             <label>投递格式<em class="required">*</em></label>
             <select class="bool" name="book_type">
 		<option value="1" {% if user.ifmobi|int==1 %}selected="selected"{% endif %}>mobi</option>
                 <option value="0" {% if user.ifmobi|int==0 %}selected="selected"{% endif %}>epub</option>
             </select>
 	    <span class="error">只有多看系统支持epub</span>
-        </p>
+        </div>
         
-        <p>
-            <a id="testlink" href="/deliver?u={{nickname}}">投递测试</a><strong id="testmsg" class="error"></strong> 注意：(旧的期刊，只用于测试投递是否成功。) 
-        </p>
+        <div class="form-group">
+            <a id="testlink" href="/deliver?u={{nickname}}" class="btn btn-default">投递测试</a><strong id="testmsg" class="error"></strong> 注意：(旧的期刊，只用于测试投递是否成功。) 
+        </div>
 
 	{% if user.level == 3 %}
-	<p>
-        	<a id="testlink" href="/deliver?u={{nickname}}&p=1">Admin投递测试</a><strong id="testmsg" class="error"></strong>
-	</p>
+	<div class="form-group">
+        	<a id="testlink" href="/deliver?u={{nickname}}&p=1" class="btn btn-default">Admin投递测试</a><strong id="testmsg" class="error"></strong>
+	</div>
 	{% endif %}
 
-	<p>
-		注意：投递需一段时间，更新内容越多所需时间越长
-	</P>
+	<div class="form-group">
+		注意：投递需一段时间
+	</div>
 
 
-        <p>
-            <input type="checkbox" name="keepimage" {% if user and user.keep_image %}checked="1"{% endif %} />
+	<div class="form-group">
             <label>保留文章图片（最大10M）</label>
-        </p>
+            <input type="checkbox" name="keepimage" {% if user and user.keep_image %}checked="1"{% endif %}  data-size="small"/>
+        </div>
 	<p>
 		多看用户注意：多看服务器可接受最大文件为20M，如果多次无法收到推送，请退订一些杂志或取消图片。
 	</p>
 
-    <p class="save_btn">
-        <input type="submit" class="btn" value="保存设置" />
+    <p class="save_btn" style="text-align:center;">
+        <input type="submit" class="btn btn-primary" value="保存设置" />
     </p>
 </form>
               <!--end======================-->
             </div>
           </div>
 
+{% endblock %}
+
+
+{% block js %}
+<script src="/static/js/bootstrap-switch.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+$(document).ready(function(){
+$("[name='enable_send']").bootstrapSwitch();
+$("[name='keepimage']").bootstrapSwitch();
+});
+</script>
 {% endblock %}

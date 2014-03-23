@@ -37,3 +37,11 @@ body {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+#scrollUp {
+bottom: 20px;
+right: 20px;
+height: 38px;
+width: 38px;
+background: url("/static/top.png") no-repeat;
+}

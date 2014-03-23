@@ -2,10 +2,20 @@
 
 
 {% block js %}
-<script src="http://dn-dogear.qbox.me/static/jquery-1.5.2.min.js?v=1.0"></script>
-
+<script src="/static/js/jquery.scrollUp.min.js"></script>
 <script type="text/javascript" charset="utf-8">
 $(document).ready(function(){
+
+$.scrollUp({
+              scrollName: 'scrollUp', // Element ID
+              topDistance: '300', // Distance from top before showing element (px)
+              topSpeed: 300, // Speed back to top (ms)
+              animation: 'fade', // Fade, slide, none
+              animationInSpeed: 200, // Animation in speed (ms)
+              animationOutSpeed: 200, // Animation out speed (ms)
+              scrollText: '', // Text for element
+              activeOverlay: false  // Set CSS color to display scrollUp active point, e.g '#00FFFF'
+        });
 
 $('.unsubscribeLink').click(function(){
         if (confirm('确定要退订？'))
@@ -58,7 +68,7 @@ function ajax_request(t, m, d, callback)
         return false;
 }
 </script>
-
+<a id="scrollUp" href="#top" title="" style="position: fixed; z-index: 2147483647; display: none;"></a>
 {% endblock %}
 
 {% block content %}
@@ -77,8 +87,10 @@ function ajax_request(t, m, d, callback)
 		<div class="panel-body">
          <p class="text-danger">{{book.descrip}}</p>
 
-          <p><a class="btn btn-primary actionButton unsubscribeLink" href="/unsubscribe/{{book.f_id}}" role="button">退订</a></p>
-	</div>
+         <div class="controls pull-right"> 
+	 <a class="btn btn-primary actionButton unsubscribeLink" href="/unsubscribe/{{book.f_id}}" role="button">退订</a>
+	 </div>
+	 </div>
 	</div>
 	{% do hasitem.append(1) %}
         {% endif %}

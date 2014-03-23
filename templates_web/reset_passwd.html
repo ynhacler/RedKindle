@@ -1,8 +1,5 @@
 {% extends "base.html" %}
  
-{% block bodytag %}
-<body onload="document.getElementById('username').focus();">
-{% endblock %}
  
 {% block menubar %}
 {% endblock %}
@@ -18,6 +15,7 @@
         <input type="password" class="form-control" name="p1" id="password" placeholder="Password" required autofocus>
         <input type="password" class="form-control" name="p2" id="password" placeholder="Password Again" required>
         <input type="hidden" value="{{nickname}}" name="u"/>
+	<br/>
         <button class="btn btn-lg btn-primary btn-block" type="submit">提交</button>
       </form>
 	  
