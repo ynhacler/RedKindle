@@ -19,7 +19,7 @@
             </div>
             <div class="panel-body">
 <!--start====================-->
-	<form id="set_frm" action="" method="post" class="form" role="form">
+	<form id="set_frm" action="" method="post" class="form-inline" role="form">
 {% if method %}
 {% if user and not user.kindle_email %}
 <strong class="error">Kindle E-mail必须填写！</strong>
@@ -31,19 +31,25 @@
     
 
 	<div class="form-group">
-            <label>Kindle E-mail<em class="required">*</em></label><br />
-	    <input type="text" name="kindle_email" class="form-control" style="width:350px;" value="{% if user and user.kindle_email %}{{ user.kindle_email }}{% endif %}" />
+            <label>推送邮箱<em class="required">*</em></label><br />
+	    <input type="text" name="kindle_email" class="form-control" style="width:220px;" value="{% if user and user.kindle_email %}{{ user.kindle_email }}{% endif %}" />
+	<select name="domain" id="id_domain" class="form-control" style="width:180px;">
+		<option value="@kindle.com" {% if user and user.domain=="@kindle.com" %}selected="selected"{% endif %}>@kindle.com</option>
+		<option value="@free.kindle.com" {% if user and user.domain=="@free.kindle.com" %}selected="selected"{% endif %}>@free.kindle.com</option>
+		<option value="@kindle.cn" {% if user and user.domain=="@kindle.cn" %}selected="selected"{% endif %}>@kindle.cn</option>
+		<option value="@iduokan.com" {% if user and user.domain=="@iduokan.com" %}selected="selected"{% endif %}>@iduokan.com</option>
+		</select>
 	    {% if not user.kindle_email %}<em style="color:red;font-size:80%">输入有误！</em>{% endif %}
         </div>
-
+<br/><br/>
 	<div class="form-group">
             <label style="color:red">定时投递</label>
 	    <input id="notification2" type="checkbox" name="enable_send" data-size="small" {% if user and user.enable_send %}checked{% endif %} />
         </div>
-
+<br/><br/>
 	<div class="form-group">
             <label>所在时区<em class="required">*</em></label>
-            <select class="bool" name="timezone">
+            <select class="bool form-control" name="timezone" >
             	{% for i in range(-12, 0) %}
                 <option value="{{ i }}" {% if user.timezone|int==i %}selected="selected"{% endif %}>{{ "GMT%02.0f:00" % i }}</option>
                 {% endfor %}
@@ -53,51 +59,55 @@
                 {% endfor %}    
             </select>
         </div>
-
+<br/><br/>
 	<div class="form-group">
             <label>投递时间<em class="required">*</em></label>
-            <select class="bool" name="send_time">
+            <select class="bool form-control" name="send_time">
 		{% for i in range(0, 24) %}
                 <option value="{{ i }}" {% if user.send_time|int == i %}selected="selected"{% endif %}>{{ "%02.0f:00" % i }}</option>
                 {% endfor %}
             </select>
 	    <br/>
-	|<input type="checkbox" name="optionday" value=0 {% if 0 in user.send_days %}checked='checked'{% endif %}>每天</input>|
+	<input type="checkbox" class="form-control" style="width:18px;" name="optionday" value=0 {% if 0 in user.send_days %}checked='checked'{% endif %}>每天</input>|
             {% for d in range(1,8) %}
-                <input type="checkbox" name="optionday" value={{d}} {% if d in user.send_days %}checked='checked'{% endif %}>
+                <input type="checkbox" name="optionday" style="width:18px;" class="form-control" value={{d}} {% if d in user.send_days %}checked='checked'{% endif %}>
                         {% if d == 7 %}
                                 星期天
                         {% else %}
                                 星期{{d}}
                         {% endif %}
-                </input>|
+                </input>
+		{% if d != 7 %}
+		|
+		{% endif %}
             {% endfor %}
 	    
         </div>
-
+<br/><br/>
         <div class="form-group">
             <label>投递格式<em class="required">*</em></label>
-            <select class="bool" name="book_type">
+            <select class="bool form-control" name="book_type">
 		<option value="1" {% if user.ifmobi|int==1 %}selected="selected"{% endif %}>mobi</option>
                 <option value="0" {% if user.ifmobi|int==0 %}selected="selected"{% endif %}>epub</option>
             </select>
 	    <span class="error">只有多看系统支持epub</span>
         </div>
-        
+<br/><br/>     
         <div class="form-group">
             <a id="testlink" href="/deliver?u={{nickname}}" class="btn btn-default">投递测试</a><strong id="testmsg" class="error"></strong> 注意：(旧的期刊，只用于测试投递是否成功。) 
         </div>
 
 	{% if user.level == 3 %}
+	<br/><br/>
 	<div class="form-group">
         	<a id="testlink" href="/deliver?u={{nickname}}&p=1" class="btn btn-default">Admin投递测试</a><strong id="testmsg" class="error"></strong>
 	</div>
 	{% endif %}
-
+<br/><br/>
 	<div class="form-group">
 		注意：投递需一段时间
 	</div>
-
+<br/>
 
 	<div class="form-group">
             <label>保留文章图片（最大10M）</label>

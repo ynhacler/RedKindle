@@ -306,6 +306,10 @@ class Admin(BaseHandler):
 	def GET(self):
 		page = 1 if not web.input().get('page') else web.input().get('page')
 		user = self.getcurrentuser()
+
+		if user.passwd == "qq" or user.passwd == "douban":
+			raise web.seeother('/my')
+
 		#fen ye
 		if user.level == 3:
 			page = int(page)
@@ -371,11 +375,21 @@ class Setting(BaseHandler):
 					days_convent.append(i)
 		user.send_days = days_convent
 
+		kindle_email = user.kindle_email
+		if len(kindle_email) == 0:
+			user.kindle_email = ''
+			user.domain = '@kindle.cn'
+		else:
+			index = kindle_email.find('@')
+			user.domain = kindle_email[index:]
+			user.kindle_email = kindle_email[:index]
+
 		return jjenv.get_template('setting.html').render(nickname=session.username,title="Setting",current='setting',user=user,mail_sender=SrcEmail,method=method)
 
 	def POST(self):
 		user = self.getcurrentuser()
 		kindle_email = web.input().get('kindle_email').strip()
+		domain = web.input().get('domain')
 		timezone = int(web.input().get('timezone'))
 		send_time = (web.input().get('send_time'))
 		ifmobi = int(web.input().get('book_type'))
@@ -385,14 +399,13 @@ class Setting(BaseHandler):
 		if len(send_days) == 0:
 			send_days = [u'0']
 
-		test_code = ['<','>','*','#','%','&']
+		test_code = ['<','>','*','#','%','&','@',' ']
 		for t_c in test_code:
 			if t_c in kindle_email:
 				kindle_email = ''
-		if '@' not in kindle_email or '.' not in kindle_email or kindle_email.strip() == '':
-			kindle_email = ''
-			enable_send = 0
-
+				enable_send = 0
+				break
+		kindle_email += domain
 
 		#用户信息设置
 		#put_user_messgaes(k_id,kindle_email,send_time=1,enable_send=0,keep_image=0,timezone=8,days=[0])

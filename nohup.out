@@ -1,0 +1,61 @@
+18:37:01 RQ worker started, version 0.3.13
+18:37:01 
+18:37:01 *** Listening on high, default, low...
+/usr/local/lib/python2.7/dist-packages/pytz/__init__.py:29: UserWarning: Module web was already imported from /home/zzh/gae/zkindle/web/__init__.pyc, but /usr/local/lib/python2.7/dist-packages is being added to sys.path
+  from pkg_resources import resource_stream
+18:37:43 RQ worker started, version 0.3.13
+18:37:43 
+18:37:43 *** Listening on high, default, low...
+/usr/local/lib/python2.7/dist-packages/pytz/__init__.py:29: UserWarning: Module web was already imported from /home/zzh/gae/zkindle/web/__init__.pyc, but /usr/local/lib/python2.7/dist-packages is being added to sys.path
+  from pkg_resources import resource_stream
+http://0.0.0.0:8080/
+Traceback (most recent call last):
+  File "/home/zzh/gae/zkindle/bmaintest.py", line 699, in <module>
+    app.run()
+  File "/home/zzh/gae/zkindle/web/application.py", line 313, in run
+    return wsgi.runwsgi(self.wsgifunc(*middleware))
+  File "/home/zzh/gae/zkindle/web/wsgi.py", line 54, in runwsgi
+    return httpserver.runsimple(func, validip(listget(sys.argv, 1, '')))
+  File "/home/zzh/gae/zkindle/web/httpserver.py", line 157, in runsimple
+    server.start()
+  File "/home/zzh/gae/zkindle/web/wsgiserver/__init__.py", line 1753, in start
+    raise socket.error(msg)
+socket.error: No socket could be created
+127.0.0.1:37217 - - [25/Mar/2014 18:38:25] "HTTP/1.1 GET /" - 200 OK
+127.0.0.1:37217 - - [25/Mar/2014 18:38:26] "HTTP/1.1 GET /static/css/bootstrap.min.css" - 200 
+127.0.0.1:37218 - - [25/Mar/2014 18:38:26] "HTTP/1.1 GET /static/jumbotron-narrow.css" - 200 
+127.0.0.1:37219 - - [25/Mar/2014 18:38:26] "HTTP/1.1 GET /static/signin.css" - 200 
+127.0.0.1:37220 - - [25/Mar/2014 18:38:26] "HTTP/1.1 GET /static/jquery.min.js" - 200 
+127.0.0.1:37221 - - [25/Mar/2014 18:38:26] "HTTP/1.1 GET /static/js/bootstrap.min.js" - 200 
+Traceback (most recent call last):
+  File "/home/zzh/gae/zkindle/worker.py", line 17, in <module>
+    worker.work()
+  File "/home/zzh/gae/zkindle/rq2/worker.py", line 329, in work
+    self.register_death()
+  File "/home/zzh/gae/zkindle/rq2/worker.py", line 214, in register_death
+    p.execute()
+  File "/usr/local/lib/python2.7/dist-packages/redis/client.py", line 2167, in execute
+    return execute(conn, stack, raise_on_error)
+  File "/usr/local/lib/python2.7/dist-packages/redis/client.py", line 2025, in _execute_transaction
+    connection.send_packed_command(all_cmds)
+  File "/usr/local/lib/python2.7/dist-packages/redis/connection.py", line 311, in send_packed_command
+Traceback (most recent call last):
+  File "/home/zzh/gae/zkindle/worker.py", line 17, in <module>
+    worker.work()
+  File "/home/zzh/gae/zkindle/rq2/worker.py", line 329, in work
+    self.register_death()
+  File "/home/zzh/gae/zkindle/rq2/worker.py", line 214, in register_death
+    p.execute()
+  File "/usr/local/lib/python2.7/dist-packages/redis/client.py", line 2167, in execute
+    return execute(conn, stack, raise_on_error)
+  File "/usr/local/lib/python2.7/dist-packages/redis/client.py", line 2025, in _execute_transaction
+    connection.send_packed_command(all_cmds)
+  File "/usr/local/lib/python2.7/dist-packages/redis/connection.py", line 311, in send_packed_command
+    self.connect()
+  File "/usr/local/lib/python2.7/dist-packages/redis/connection.py", line 253, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 111 connecting localhost:6379. Connection refused.
+    self.connect()
+  File "/usr/local/lib/python2.7/dist-packages/redis/connection.py", line 253, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 111 connecting localhost:6379. Connection refused.
