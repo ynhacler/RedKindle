@@ -52,7 +52,10 @@ class Qiushibaike(WebpageBook):
         if u'小时' in soup.html.head.title.string: #qiushibaike
             for article in soup.find_all("a", attrs={"href":re.compile(r'^/article')}):
                 p = soup.new_tag("p", style='color:grey;text-decoration:underline;')
-                p.string = article.string
+		if article.string==None:
+			p.string = ' '
+		else:
+			p.string = article.string
                 article.replace_with(p)
             
             first = True

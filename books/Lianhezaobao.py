@@ -30,15 +30,18 @@ class Lianhezaobao(BaseFeedBook):
               ]
 
 
-	def fetcharticle(self, url, decoder):
+	def fetcharticle2(self, url, decoder):
 		opener = URLOpener(self.host, timeout=self.timeout)
 		result = opener.open(url)
 		status_code, content = result.code, result.content
+
+		print content
 		if status_code != 200 or not content:
 			self.log.warn('fetch article failed(%d):%s.' % (status_code,url))
 			return None
 		soup = BeautifulSoup(content,'lxml')
 		cont = soup.findAll(attrs={"align":"right"})
+		print cont
 		url = cont[0].a['href']
 
 		result = opener.open(url)

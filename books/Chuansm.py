@@ -42,7 +42,7 @@ class Chuansm(BaseFeedBook):
 			cont = soup.findAll(attrs={"class":"feed_item_question"})
 			for con in cont:
 				title = con.a.get_text()
-				href = con.a['href']
+				href = "http://chuansongme.com%s" % con.a['href']
 				urls.append((section, title, href, None))
 		else:
 			self.log.warn('fetch rss failed(%d):%s'%(result.code,url))

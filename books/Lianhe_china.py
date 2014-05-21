@@ -31,6 +31,28 @@ class Lianhe_china(BaseFeedBook):
 
 	http_daili = 'http://go2.10086.cn/%s'
 
+	def ParseFeedUrls(self):
+		urls = []
+		urladded = set()
+		url = self.feeds[0][1]
+		opener = URLOpener(self.host, timeout=self.timeout)
+		result = opener.open(url)
+		section = self.feeds[0][0]
+		if result.code == 200 and result.content:
+			soup = BeautifulSoup(result.content,'lxml')
+			cont1 = soup.findAll("title")
+			cont2 = soup.findAll("guid")
+			nums = len(cont2)
+			for i in range(nums):
+				title = cont1[i+2].string
+				href = cont2[i].string
+				url = self.trueURL_zzh(href)
+				urls.append((section, title, url, None))
+		else:
+			self.log.warn('fetch rss failed(%d):%s'%(result.code,url))
+		return urls
+
+
 	def trueURL_zzh(self,urls):
 		count = 0
 		temp_i = 0
@@ -44,9 +66,11 @@ class Lianhe_china(BaseFeedBook):
 		return newurl
 
 
-	def fetcharticle(self, url, decoder):
+	def fetcharticle2(self, url, decoder):
+		#url = self.http_daili % url[7:]
 		opener = URLOpener(self.host, timeout=self.timeout)
 		result = opener.open(url)
+		print result.realurl
 		status_code, content = result.code, result.content
 		if status_code != 200 or not content:
 			self.log.warn('fetch article failed(%d):%s.' % (status_code,url))
@@ -57,7 +81,6 @@ class Lianhe_china(BaseFeedBook):
 
 		url = self.trueURL_zzh(url)
 		#文章url
-		#url = self.http_daili % url[7:]
 		result = opener.open(url)
 		status_code, content = result.code, result.content
 		if status_code != 200 or not content:
