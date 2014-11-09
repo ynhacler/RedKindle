@@ -376,7 +376,11 @@ class Setting(BaseHandler):
 		user.send_days = days_convent
 
 		kindle_email = user.kindle_email
-		if len(kindle_email) == 0:
+		
+		if kindle_email is None :
+			user.kindle_email = ''
+			user.domain = '@kindle.cn'
+		elif len(kindle_email) == 0:
 			user.kindle_email = ''
 			user.domain = '@kindle.cn'
 		else:
