@@ -20,7 +20,7 @@ class Chuansm(BaseFeedBook):
 	coverfile = "cv_zhihudaily.jpg"
 	fulltext_by_readability = False
 	fulltext_by_instapaper = False
-	keep_only_tags = [dict(name='div', attrs={'class':'page-content'})]
+	keep_only_tags = [dict(name='div', attrs={'class':'rich_media_content'})]
 	remove_tags = []
 	remove_ids = []
 	remove_classes = []
@@ -42,7 +42,7 @@ class Chuansm(BaseFeedBook):
 			cont = soup.findAll(attrs={"class":"feed_item_question"})
 			for con in cont:
 				title = con.a.get_text()
-				href = "http://chuansongme.com%s" % con.a['href']
+				href = "http://chuansong.me%s" % con.a['href']
 				urls.append((section, title, href, None))
 		else:
 			self.log.warn('fetch rss failed(%d):%s'%(result.code,url))
